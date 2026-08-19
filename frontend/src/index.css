@@ -1,0 +1,416 @@
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --tag-color: #7c3aed;
+  --tag-background: rgba(124, 58, 237, 0.08);
+  --tag-border: rgba(124, 58, 237, 0.35);
+  --tag-background-hover: rgba(124, 58, 237, 0.16);
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.note-viewer {
+  max-width: 900px;
+  margin: 0 auto;
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+
+/* Headings */
+
+.note-viewer h1 {
+  font-size: 2.2rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.note-viewer h2 {
+  font-size: 1.7rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.note-viewer h3 {
+  font-size: 1.35rem;
+  margin-top: 1.5rem;
+}
+
+
+/* Paragraphs */
+
+.note-viewer p {
+  margin: 1rem 0;
+}
+
+
+/* Lists */
+
+.note-viewer ul,
+.note-viewer ol {
+  padding-left: 2rem;
+}
+
+
+/* Links */
+
+.note-viewer a {
+  text-decoration: underline;
+}
+
+
+/* Inline code */
+
+.note-viewer code {
+  padding: 0.15rem 0.35rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+
+/* Code blocks */
+
+.note-viewer pre {
+  padding: 1rem;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.note-viewer pre code {
+  padding: 0;
+}
+
+
+/* Blockquotes */
+
+.note-viewer blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1rem;
+  border-left: 3px solid currentColor;
+  opacity: 0.8;
+}
+
+
+/* Tables */
+
+.note-viewer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+}
+
+.note-viewer th,
+.note-viewer td {
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+  border: 1px solid currentColor;
+}
+
+
+/* Horizontal rule */
+
+.note-viewer hr {
+  margin: 2rem 0;
+}
+
+
+
+
+
+
+
+
+/* ============================================================
+   OBSIDIAN CALLOUTS
+   ============================================================ */
+
+.obsidian-callout {
+  margin: 1.5rem 0;
+  padding: 0;
+
+  border: 1px solid;
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+
+/* ------------------------------------------------------------
+   Title
+   ------------------------------------------------------------ */
+
+.obsidian-callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.7rem 1rem;
+
+  font-weight: 600;
+}
+
+
+.obsidian-callout-icon {
+  font-size: 1.1rem;
+}
+
+
+.obsidian-callout-content {
+  padding: 0.8rem 1rem;
+}
+
+
+.obsidian-callout-content > :first-child {
+  margin-top: 0;
+}
+
+
+.obsidian-callout-content > :last-child {
+  margin-bottom: 0;
+}
+
+
+/* ============================================================
+   CALLOUT TYPES
+   ============================================================ */
+
+
+/* NOTE */
+
+.obsidian-callout-note {
+  background-color: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.45);
+}
+
+.obsidian-callout-note
+.obsidian-callout-title {
+  color: #3b82f6;
+}
+
+
+/* INFO */
+
+.obsidian-callout-info {
+  color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.45);
+}
+
+
+/* TIP */
+
+.obsidian-callout-tip {
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.45);
+}
+
+
+/* SUCCESS */
+
+.obsidian-callout-success {
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.08);
+  border-color: rgba(16, 185, 129, 0.45);
+}
+
+
+/* WARNING */
+
+.obsidian-callout-warning {
+  color: #f59e0b;
+  background-color: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.45);
+}
+
+
+/* DANGER */
+
+.obsidian-callout-danger {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+
+/* ERROR */
+
+.obsidian-callout-error {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.45);
+}
+
+
+/* QUESTION */
+
+.obsidian-callout-question {
+  color: #8b5cf6;
+  background-color: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.45);
+}
+
+
+/* EXAMPLE */
+
+.obsidian-callout-example {
+  color: #8b5cf6;
+  background-color: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.45);
+}
+
+
+
+
+
+
+/* ============================================================
+   OBSIDIAN TAGS
+   ============================================================ */
+
+.obsidian-tag {
+  display: inline-block;
+
+  margin: 0 0.15rem;
+  padding: 0.15rem 0.45rem;
+
+  border: 1px solid var(--tag-border);
+  border-radius: 999px;
+
+  background: var(--tag-background);
+  color: var(--tag-color);
+
+  font: inherit;
+  font-size: 0.9em;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+.obsidian-tag:hover {
+  background: var(--tag-background-hover);
+}
