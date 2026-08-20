@@ -7,6 +7,7 @@ from app.markdown.tag_parser import TagParser
 from app.markdown.wikilink_parser import (
     WikiLinkParser,
 )
+from app.markdown.task_parser import TaskParser
 from app.markdown.wikilink_resolver import (
     WikiLinkResolver,
 )
@@ -34,6 +35,8 @@ class VaultIndexer:
         self.wikilink_parser = (
             WikiLinkParser()
         )
+
+        self.task_parser = TaskParser()
 
         self.wikilink_resolver = (
             WikiLinkResolver(
@@ -91,6 +94,13 @@ class VaultIndexer:
                 )
             )
 
+            tasks = (
+                self.task_parser.extract_tasks(
+                    content,
+                    relative_path,
+                )
+            )
+
             resolved_links: list[
                 ResolvedLink
             ] = []
@@ -134,6 +144,7 @@ class VaultIndexer:
                     ),
 
                     backlinks=[],
+                    tasks=tasks,
                 )
             )
 

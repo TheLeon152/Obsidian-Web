@@ -1,0 +1,70 @@
+.workload-widget {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+}
+
+
+.workload-header {
+  margin-bottom: 20px;
+}
+
+
+.workload-header h2 {
+  margin: 0;
+}
+
+
+.workload-period {
+  color: #777;
+  font-size: 0.85rem;
+}
+
+
+.workload-stats {
+  display: grid;
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 12px;
+}
+
+
+.workload-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  padding: 12px;
+
+  border-radius: 8px;
+  background: #f5f5f5;
+}
+
+
+.workload-stat span {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+
+.workload-stat strong {
+  font-size: 1.4rem;
+}
+
+
+.workload-assessment {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+
+.workload-bar {
+  font-family: monospace;
+  letter-spacing: 1px;
+}

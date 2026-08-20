@@ -8,6 +8,8 @@ from app.api.vault import router as vault_router
 from app.api.assets import router as assets_router
 from app.api.tags import router as tags_router
 from app.api.search import router as search_router
+from app.api.tasks import router as tasks_router
+from app.api.calendar import router as calendar_router
 
 
 app = FastAPI(
@@ -37,3 +39,5 @@ app.include_router(notes_router)
 app.include_router(assets_router)
 app.include_router(tags_router)
 app.include_router(search_router)
+app.include_router(tasks_router)
+app.include_router(calendar_router)

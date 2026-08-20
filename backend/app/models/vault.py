@@ -2,6 +2,8 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 
+from app.models.task import Task
+
 
 class VaultNode(BaseModel):
     name: str
@@ -67,5 +69,9 @@ class IndexedNote(BaseModel):
     )
 
     backlinks: list[NoteReference] = Field(
+        default_factory=list
+    )
+
+    tasks: list[Task] = Field(
         default_factory=list
     )

@@ -19,6 +19,13 @@ import type { VaultNode } from "./types/vault";
 import { resolveNote } from "./api/notes";
 import { NotePage } from "./pages/NotePage/NotePage";
 import { TagPage } from "./pages/TagPage/TagPage";
+import { TodayTasksPage } from "./pages/TaskPage/TodayTasksPage";
+import { UpcomingTasksPage } from "./pages/TaskPage/UpcomingTasksPage";
+import { NextTasksPage } from "./pages/TaskPage/NextTasksPage";
+import { WaitingTasksPage } from "./pages/TaskPage/WaitingTasksPage";
+import { BlockedTasksPage } from "./pages/TaskPage/BlockedTasksPage";
+import { TaskDashboardPage } from "./pages/TaskPage/TaskDashboardPage";
+import { DailyPage } from "./pages/DailyPage/DailyPage";
 
 
 function App() {
@@ -246,7 +253,7 @@ function AppRoutes({
     >
       <Routes>
 
-        <Route
+        {/* <Route
           path="/"
           element={
             <div>
@@ -257,7 +264,7 @@ function AppRoutes({
               </p>
             </div>
           }
-        />
+        /> */}
 
 
         <Route
@@ -275,6 +282,62 @@ function AppRoutes({
                 handleNoteClick
               }
             />
+          }
+        />
+
+
+        <Route
+          path="/tasks/today"
+          element={
+            <TodayTasksPage />
+          }
+        />
+
+
+        <Route
+          path="/tasks/upcoming"
+          element={
+            <UpcomingTasksPage />
+          }
+        />
+
+
+        <Route
+          path="/tasks/next"
+          element={
+            <NextTasksPage />
+          }
+        />
+
+
+        <Route
+          path="/tasks/waiting"
+          element={
+            <WaitingTasksPage />
+          }
+        />
+
+
+        <Route
+          path="/tasks/blocked"
+          element={
+            <BlockedTasksPage />
+          }
+        />
+
+
+        <Route
+          path="/tasks"
+          element={
+            <TaskDashboardPage />
+          }
+        />
+
+
+        <Route
+          path="/"
+          element={
+            <DailyPage />
           }
         />
 

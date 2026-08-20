@@ -9,6 +9,7 @@ from pydantic_settings import (
 class Settings(BaseSettings):
 
     vault_path: Path
+    google_calendar_url: str
 
     cors_origins: list[str] = [
         "http://localhost:5173",

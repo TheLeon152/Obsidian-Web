@@ -1,0 +1,123 @@
+.daily-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+.daily-header h1 {
+  margin-bottom: 4px;
+}
+
+
+.daily-header p {
+  margin: 0;
+
+  color: #777;
+}
+
+
+.daily-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 20px;
+}
+
+
+.daily-card {
+  padding: 20px;
+
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  background: white;
+}
+
+
+.daily-card h2 {
+  margin-top: 0;
+}
+
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+.task-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 10px;
+
+  border-radius: 6px;
+
+  background: #f5f5f5;
+}
+
+
+.task-row-column {
+  align-items: flex-start;
+
+  flex-direction: column;
+}
+
+
+.task-text {
+  flex: 1;
+}
+
+
+.task-priority {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+
+.priority-high {
+  color: #e74c3c;
+}
+
+
+.priority-medium {
+  color: #f39c12;
+}
+
+
+.priority-low {
+  color: #2ecc71;
+}
+
+
+.task-table {
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+
+.task-table th,
+.task-table td {
+  padding: 10px;
+
+  text-align: left;
+
+  border-bottom: 1px solid #ddd;
+}
+
+
+.empty-state {
+  color: #777;
+}
