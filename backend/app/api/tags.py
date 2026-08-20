@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.services.tag_service import TagService
-from app.services.vault import vault_indexer
+from app.services import vault_indexer
 
 
 router = APIRouter(

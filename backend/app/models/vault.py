@@ -45,3 +45,27 @@ class Note(BaseModel):
     backlinks: list[NoteReference] = Field(
         default_factory=list
     )
+
+class IndexedNote(BaseModel):
+    name: str
+    path: str
+
+    tags: list[str] = Field(
+        default_factory=list
+    )
+
+    frontmatter: dict[str, Any] = Field(
+        default_factory=dict
+    )
+
+    links: list[str] = Field(
+        default_factory=list
+    )
+
+    resolved_links: list[ResolvedLink] = Field(
+        default_factory=list
+    )
+
+    backlinks: list[NoteReference] = Field(
+        default_factory=list
+    )

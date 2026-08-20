@@ -14,6 +14,7 @@ class NoteService:
         self.vault_path = vault_path
         self.vault_indexer = vault_indexer
 
+
     def get_note(
         self,
         relative_path: str,
@@ -52,61 +53,34 @@ class NoteService:
         )
 
         metadata = index.get(
-            relative_path,
-            {}
+            relative_path
         )
+
+        if metadata is None:
+            raise FileNotFoundError(
+                f"Note not found in index: {relative_path}"
+            )
 
         content = self._remove_frontmatter(
             content
         )
 
         return Note(
-            name=note_path.name,
-            path=relative_path,
+            name=metadata.name,
+            path=metadata.path,
             content=content,
 
-            tags=metadata.get(
-                "tags",
-                [],
-            ),
+            tags=metadata.tags,
 
-            frontmatter=metadata.get(
-                "frontmatter",
-                {},
-            ),
+            frontmatter=metadata.frontmatter,
 
-            links=metadata.get(
-                "links",
-                [],
-            ),
+            links=metadata.links,
 
-            resolved_links=[
-                {
-                    "target": link["target"],
-                    "path": link["path"],
-                    "name": Path(
-                        link["path"]
-                    ).name,
-                }
-                for link in metadata.get(
-                    "resolved_links",
-                    [],
-                )
-            ],
+            resolved_links=metadata.resolved_links,
 
-            backlinks=[
-                {
-                    "name": Path(
-                        backlink
-                    ).name,
-                    "path": backlink,
-                }
-                for backlink in metadata.get(
-                    "backlinks",
-                    [],
-                )
-            ],
+            backlinks=metadata.backlinks,
         )
+
 
     def _resolve_path(
         self,
@@ -130,6 +104,7 @@ class NoteService:
 
         return note_path
 
+
     def _remove_frontmatter(
         self,
         content: str,
@@ -147,6 +122,7 @@ class NoteService:
             return content
 
         for index in range(1, len(lines)):
+
             if lines[index].strip() == "---":
                 return "\n".join(
                     lines[index + 1:]

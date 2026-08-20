@@ -1,4 +1,6 @@
 import type { Note } from "../types/note";
+import { apiFetch } from "./client";
+
 
 interface NoteReference {
   name: string;
@@ -6,39 +8,25 @@ interface NoteReference {
 }
 
 
-const API_BASE_URL =
-  "http://localhost:8000";
-
-
 export async function getNote(
-  path: string
+  path: string,
 ): Promise<Note> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/notes/${encodeURI(path)}`
-  );
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to load note: ${response.status}`
-    );
-  }
+  const response = await apiFetch(
+    `/api/v1/notes/${encodeURI(path)}`,
+  );
 
   return response.json();
 }
 
 
 export async function resolveNote(
-  target: string
+  target: string,
 ): Promise<NoteReference> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/notes/resolve/${encodeURIComponent(target)}`
-  );
 
-  if (!response.ok) {
-    throw new Error(
-      `Failed to resolve note: ${response.status}`
-    );
-  }
+  const response = await apiFetch(
+    `/api/v1/notes/resolve/${encodeURIComponent(target)}`,
+  );
 
   return response.json();
 }

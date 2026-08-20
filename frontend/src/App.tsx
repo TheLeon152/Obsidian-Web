@@ -8,7 +8,10 @@ import {
   useParams,
 } from "react-router-dom";
 
-import { getVaultTree } from "./api/vault";
+import {
+  getVaultTree,
+  refreshVault,
+} from "./api/vault";
 
 import { VaultLayout } from "./layouts/VaultLayout";
 
@@ -27,6 +30,13 @@ function App() {
 
   const [error, setError] =
     useState<string | null>(null);
+
+  const [refreshing, setRefreshing] =
+    useState(false);
+
+  const [refreshKey, setRefreshKey] =
+    useState(0);
+
 
   useEffect(() => {
     async function loadVault() {
@@ -50,24 +60,63 @@ function App() {
   }, []);
 
 
+  async function handleRefresh() {
+    setRefreshing(true);
+        setRefreshKey(
+      (current) => current + 1
+    );
+
+    try {
+      await refreshVault();
+
+      const tree =
+        await getVaultTree();
+
+      setVaultTree(tree);
+
+      setError(null);
+    } catch (error) {
+      console.error(
+        "Could not refresh vault:",
+        error
+      );
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Could not refresh vault."
+      );
+    } finally {
+      setRefreshing(false);
+    }
+  }
+
+
   if (loading) {
     return <div>Loading vault...</div>;
   }
 
 
-  if (error) {
+  if (error && !vaultTree) {
     return <div>Error: {error}</div>;
   }
 
 
   if (!vaultTree) {
-    return <div>Vault could not be loaded.</div>;
+    return (
+      <div>
+        Vault could not be loaded.
+      </div>
+    );
   }
 
 
   return (
     <AppRoutes
       vaultTree={vaultTree}
+      onRefresh={handleRefresh}
+      refreshing={refreshing}
+      refreshKey={refreshKey}
     />
   );
 }
@@ -75,17 +124,23 @@ function App() {
 
 interface AppRoutesProps {
   vaultTree: VaultNode;
+  onRefresh: () => void;
+  refreshing: boolean;
+  refreshKey: number;
 }
 
 
 function AppRoutes({
   vaultTree,
+  onRefresh,
+  refreshing,
+  refreshKey,
 }: AppRoutesProps) {
   const navigate = useNavigate();
 
 
   function handleTagClick(
-  tag: string
+    tag: string
   ) {
     navigate(
       `/tag/${tag}`
@@ -102,50 +157,6 @@ function AppRoutes({
   }
 
 
-  /* async function handleNoteClick(
-    target: string
-  ) {
-    try {
-      const normalizedTarget =
-        target
-          .replace(/\\/g, "/")
-          .trim();
-
-      // Links mit einem Pfad werden direkt
-      // als Vault-Pfad behandelt.
-      if (
-        normalizedTarget.includes("/")
-      ) {
-        const path =
-          normalizedTarget.endsWith(".md")
-            ? normalizedTarget
-            : `${normalizedTarget}.md`;
-
-        navigate(
-          `/note/${encodeURI(path)}`
-        );
-
-        return;
-      }
-
-      // Ein einfacher Name wird über den
-      // NoteResolver aufgelöst.
-      const reference =
-        await resolveNote(
-          normalizedTarget
-        );
-
-      navigate(
-        `/note/${encodeURI(reference.path)}`
-      );
-    } catch (error) {
-      console.error(
-        `Could not resolve note link: ${target}`,
-        error
-      );
-    }
-  } */
-
   async function handleNoteClick(
     path: string
   ) {
@@ -160,7 +171,9 @@ function AppRoutes({
         normalizedPath.endsWith(".md")
       ) {
         navigate(
-          `/note/${encodeURI(normalizedPath)}`
+          `/note/${encodeURI(
+            normalizedPath
+          )}`
         );
 
         return;
@@ -188,8 +201,11 @@ function AppRoutes({
         );
 
       navigate(
-        `/note/${encodeURI(reference.path)}`
+        `/note/${encodeURI(
+          reference.path
+        )}`
       );
+
     } catch (error) {
       console.error(
         `Could not open note: ${path}`,
@@ -207,8 +223,11 @@ function AppRoutes({
         await resolveNote(target);
 
       navigate(
-        `/note/${encodeURI(reference.path)}`
+        `/note/${encodeURI(
+          reference.path
+        )}`
       );
+
     } catch {
       alert(
         `Die Note "${target}" wurde nicht gefunden.`
@@ -221,13 +240,18 @@ function AppRoutes({
     <VaultLayout
       tree={vaultTree}
       onFileClick={handleFileClick}
+      onRefresh={onRefresh}
+      refreshing={refreshing}
+      onSearchNoteClick={handleFileClick}
     >
       <Routes>
+
         <Route
           path="/"
           element={
             <div>
               <h1>Obsidian Web</h1>
+
               <p>
                 Select a note from the vault.
               </p>
@@ -235,10 +259,12 @@ function AppRoutes({
           }
         />
 
+
         <Route
           path="/note/*"
           element={
             <NotePage
+              refreshKey={refreshKey}
               onWikiLinkClick={
                 handleWikiLinkClick
               }
@@ -252,14 +278,18 @@ function AppRoutes({
           }
         />
 
+
         <Route
           path="/tag/*"
           element={
             <TagRoute
-              onOpenNote={handleFileClick}
+              onOpenNote={
+                handleFileClick
+              }
             />
           }
         />
+
 
         <Route
           path="*"
@@ -270,10 +300,12 @@ function AppRoutes({
             />
           }
         />
+
       </Routes>
     </VaultLayout>
   );
 }
+
 
 function TagRoute({
   onOpenNote,
@@ -282,7 +314,8 @@ function TagRoute({
     path: string
   ) => void;
 }) {
-  const { "*": tagPath } = useParams();
+  const { "*": tagPath } =
+    useParams();
 
   if (!tagPath) {
     return (
@@ -294,7 +327,9 @@ function TagRoute({
   }
 
   const tag =
-    decodeURIComponent(tagPath);
+    decodeURIComponent(
+      tagPath
+    );
 
   return (
     <TagPage

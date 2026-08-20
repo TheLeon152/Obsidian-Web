@@ -6,6 +6,8 @@ import { NoteViewer } from "../../components/NoteViewer/NoteViewer";
 
 
 interface NotePageProps {
+  refreshKey: number;
+
   onWikiLinkClick: (
     target: string
   ) => void;
@@ -21,6 +23,7 @@ interface NotePageProps {
 
 
 export function NotePage({
+  refreshKey,
   onWikiLinkClick,
   onTagClick,
   onNoteClick,
@@ -68,7 +71,7 @@ export function NotePage({
     }
 
     loadNote();
-  }, [notePath]);
+  }, [notePath, refreshKey]);
 
 
   return (

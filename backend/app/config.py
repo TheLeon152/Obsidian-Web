@@ -1,10 +1,18 @@
 from pathlib import Path
 
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict,
+)
 
 
 class Settings(BaseSettings):
+
     vault_path: Path
+
+    cors_origins: list[str] = [
+        "http://localhost:5173",
+    ]
 
     model_config = SettingsConfigDict(
         env_file=".env",
@@ -13,6 +21,7 @@ class Settings(BaseSettings):
     )
 
     def validate_vault(self) -> None:
+
         if not self.vault_path.exists():
             raise ValueError(
                 f"Vault path does not exist: {self.vault_path}"

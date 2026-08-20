@@ -1,17 +1,27 @@
 import type { VaultNode } from "../types/vault";
+import { apiFetch } from "./client";
 
-const API_BASE_URL = "http://localhost:8000";
 
 export async function getVaultTree(): Promise<VaultNode> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/vault/tree`
+
+  const response = await apiFetch(
+    "/api/v1/vault/tree",
+  );
+
+  return response.json();
+}
+
+export async function refreshVault(): Promise<void> {
+  const response = await apiFetch(
+    "/api/v1/vault/refresh",
+    {
+      method: "POST",
+    }
   );
 
   if (!response.ok) {
     throw new Error(
-      `Failed to load vault tree: ${response.status}`
+      `Failed to refresh vault: ${response.status}`
     );
   }
-
-  return response.json();
 }

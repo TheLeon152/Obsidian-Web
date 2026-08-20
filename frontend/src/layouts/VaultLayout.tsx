@@ -3,18 +3,26 @@ import type { ReactNode } from "react";
 import { FileTree } from "../components/FileTree/FileTree";
 import type { VaultNode } from "../types/vault";
 
+import { SearchBar } from "../components/SearchBar/SearchBar";
+
 
 interface VaultLayoutProps {
   tree: VaultNode;
   onFileClick: (path: string) => void;
+  onRefresh: () => void;
+  refreshing: boolean;
   children: ReactNode;
+  onSearchNoteClick: (path: string) => void;
 }
 
 
 export function VaultLayout({
   tree,
   onFileClick,
+  onRefresh,
+  refreshing,
   children,
+  onSearchNoteClick,
 }: VaultLayoutProps) {
   return (
     <div
@@ -32,6 +40,20 @@ export function VaultLayout({
         }}
       >
         <h2>Vault</h2>
+
+        <button
+          type="button"
+          onClick={onRefresh}
+          disabled={refreshing}
+        >
+          {refreshing
+            ? "↻ Refreshing..."
+            : "↻ Refresh"}
+        </button>
+
+        <SearchBar
+          onNoteClick={onSearchNoteClick}
+        />
 
         <FileTree
           tree={tree}

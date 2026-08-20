@@ -11,7 +11,7 @@ import "highlight.js/styles/github-dark.css";
 import React, { type ReactNode } from "react";
 import { parseObsidianInline } from "../../utils/parseObsidianInline";
 import { VaultImage } from "../VaultImage/VaultImage";
-import type { ResolvedLink } from "../../types/note";
+import remarkBreaks from "remark-breaks";
 
 interface MarkdownRendererProps {
   content: string;
@@ -40,6 +40,7 @@ export function MarkdownRenderer({
     <ReactMarkdown
       remarkPlugins={[
         remarkGfm,
+        remarkBreaks,
         remarkObsidianCallouts
       ]}
       rehypePlugins={[rehypeHighlight]}

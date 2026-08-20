@@ -1,15 +1,19 @@
 from pathlib import Path
 
-from app.markdown.tag_parser import TagParser
 from app.markdown.frontmatter_parser import (
     FrontmatterParser,
 )
+from app.markdown.tag_parser import TagParser
 from app.markdown.wikilink_parser import (
     WikiLinkParser,
 )
-
 from app.markdown.wikilink_resolver import (
     WikiLinkResolver,
+)
+from app.models.vault import (
+    IndexedNote,
+    NoteReference,
+    ResolvedLink,
 )
 
 
@@ -20,17 +24,16 @@ class VaultIndexer:
         vault_path: Path,
     ):
         self.vault_path = vault_path
-        self.tag_parser = TagParser()
 
-        self._index: dict[
-            str,
-            dict[str, list[str]]
-        ] = {}
+        self.tag_parser = TagParser()
 
         self.frontmatter_parser = (
             FrontmatterParser()
         )
-        self.wikilink_parser = WikiLinkParser()
+
+        self.wikilink_parser = (
+            WikiLinkParser()
+        )
 
         self.wikilink_resolver = (
             WikiLinkResolver(
@@ -38,12 +41,20 @@ class VaultIndexer:
             )
         )
 
+        self._index: dict[
+            str,
+            IndexedNote,
+        ] = {}
+
 
     def build(self) -> None:
 
         self.wikilink_resolver.build()
 
-        index = {}
+        index: dict[
+            str,
+            IndexedNote,
+        ] = {}
 
         for path in self.vault_path.rglob(
             "*.md"
@@ -52,6 +63,7 @@ class VaultIndexer:
                 content = path.read_text(
                     encoding="utf-8"
                 )
+
             except UnicodeDecodeError:
                 continue
 
@@ -61,8 +73,10 @@ class VaultIndexer:
                 ).as_posix()
             )
 
-            tags = self.tag_parser.extract_tags(
-                content
+            tags = (
+                self.tag_parser.extract_tags(
+                    content
+                )
             )
 
             frontmatter = (
@@ -77,7 +91,9 @@ class VaultIndexer:
                 )
             )
 
-            resolved_links = []
+            resolved_links: list[
+                ResolvedLink
+            ] = []
 
             for link in links:
 
@@ -91,23 +107,35 @@ class VaultIndexer:
                     continue
 
                 resolved_links.append(
-                    {
-                        "target": link,
-                        "path": target_path,
-                    }
+                    ResolvedLink(
+                        target=link,
+                        path=target_path,
+                        name=Path(
+                            target_path
+                        ).stem,
+                    )
                 )
 
-            index[relative_path] = {
-                "tags": sorted(tags),
-                "frontmatter": frontmatter,
-                "links": sorted(links),
-                "resolved_links": sorted(
-                    resolved_links,
-                    key=lambda item:
-                        item["path"].lower(),
-                ),
-                "backlinks": [],
-            }
+            index[relative_path] = (
+                IndexedNote(
+                    name=path.stem,
+                    path=relative_path,
+
+                    tags=sorted(tags),
+
+                    frontmatter=frontmatter,
+
+                    links=sorted(links),
+
+                    resolved_links=sorted(
+                        resolved_links,
+                        key=lambda item:
+                            item.path.lower(),
+                    ),
+
+                    backlinks=[],
+                )
+            )
 
         self._build_backlinks(
             index
@@ -118,31 +146,49 @@ class VaultIndexer:
 
     def _build_backlinks(
         self,
-        index: dict,
+        index: dict[
+            str,
+            IndexedNote,
+        ],
     ) -> None:
 
-        for source_path, note in index.items():
+        for source_path, note in (
+            index.items()
+        ):
 
-            for link in note["resolved_links"]:
+            for link in (
+                note.resolved_links
+            ):
 
-                target_path = link["path"]
+                target_path = link.path
 
                 if target_path not in index:
                     continue
 
-                index[target_path][
-                    "backlinks"
-                ].append(
-                    source_path
+                source_note = (
+                    index[source_path]
+                )
+
+                index[
+                    target_path
+                ].backlinks.append(
+                    NoteReference(
+                        name=source_note.name,
+                        path=source_path,
+                    )
                 )
 
         for note in index.values():
-            note["backlinks"].sort(
-                key=str.lower
+            note.backlinks.sort(
+                key=lambda item:
+                    item.path.lower()
             )
 
 
     def get_index(
         self,
-    ) -> dict[str, dict[str, list[str]]]:
+    ) -> dict[
+        str,
+        IndexedNote,
+    ]:
         return self._index
