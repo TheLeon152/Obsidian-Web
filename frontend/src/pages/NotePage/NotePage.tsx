@@ -13,12 +13,17 @@ interface NotePageProps {
   onTagClick: (
     tag: string
   ) => void;
+
+  onNoteClick: (
+    path: string
+  ) => void;
 }
 
 
 export function NotePage({
   onWikiLinkClick,
   onTagClick,
+  onNoteClick,
 }: NotePageProps) {
   const { "*": notePath } = useParams();
 
@@ -73,6 +78,7 @@ export function NotePage({
       error={error}
       onWikiLinkClick={onWikiLinkClick}
       onTagClick={onTagClick}
+      onNoteClick={onNoteClick}
     />
   );
 }

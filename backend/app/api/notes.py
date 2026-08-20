@@ -4,6 +4,7 @@ from app.config import settings
 from app.models.vault import Note, NoteReference
 from app.services.note_resolver import NoteResolver
 from app.services.note_service import NoteService
+from app.services.vault import vault_indexer
 
 
 router = APIRouter(
@@ -12,17 +13,28 @@ router = APIRouter(
 )
 
 
-note_service = NoteService(settings.vault_path)
-note_resolver = NoteResolver(settings.vault_path)
+note_service = NoteService(
+    settings.vault_path,
+    vault_indexer,
+)
+
+note_resolver = NoteResolver(
+    settings.vault_path
+)
 
 
 @router.get(
-    "/resolve/{note_name}",
+    "/resolve/{note_name:path}",
     response_model=NoteReference,
 )
-def resolve_note(note_name: str) -> NoteReference:
+def resolve_note(
+    note_name: str,
+) -> NoteReference:
+
     try:
-        return note_resolver.resolve(note_name)
+        return note_resolver.resolve(
+            note_name
+        )
 
     except FileNotFoundError:
         raise HTTPException(
@@ -41,9 +53,14 @@ def resolve_note(note_name: str) -> NoteReference:
     "/{note_path:path}",
     response_model=Note,
 )
-def get_note(note_path: str) -> Note:
+def get_note(
+    note_path: str,
+) -> Note:
+
     try:
-        return note_service.get_note(note_path)
+        return note_service.get_note(
+            note_path
+        )
 
     except FileNotFoundError:
         raise HTTPException(

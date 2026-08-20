@@ -1,0 +1,38 @@
+.wiki-link {
+  padding: 0;
+  border: none;
+
+  background: none;
+
+  font: inherit;
+
+  transition:
+    color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.wiki-link-resolved {
+  color: inherit;
+
+  cursor: pointer;
+
+  text-decoration: underline;
+  text-decoration-color: rgba(127, 127, 127, 0.5);
+  text-underline-offset: 2px;
+}
+
+.wiki-link-resolved:hover {
+  text-decoration-color: currentColor;
+}
+
+.wiki-link-unresolved {
+  color: var(--text-muted, #888);
+
+  cursor: default;
+
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-underline-offset: 2px;
+
+  opacity: 0.7;
+}

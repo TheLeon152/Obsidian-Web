@@ -1,0 +1,58 @@
+.note-properties {
+  margin-bottom: 2.5rem;
+}
+
+.note-properties h2 {
+  margin: 0 0 0.75rem;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  color: var(--text-muted, #888);
+}
+
+.note-properties-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  border: 1px solid
+    rgba(127, 127, 127, 0.2);
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  font-size: 0.9rem;
+}
+
+.note-properties-table tr {
+  border-bottom: 1px solid
+    rgba(127, 127, 127, 0.15);
+}
+
+.note-properties-table tr:last-child {
+  border-bottom: none;
+}
+
+.note-properties-table th,
+.note-properties-table td {
+  padding: 0.55rem 0.75rem;
+
+  text-align: left;
+  vertical-align: top;
+}
+
+.note-properties-table th {
+  width: 30%;
+
+  font-weight: 500;
+
+  color: var(--text-muted, #888);
+
+  background: rgba(127, 127, 127, 0.05);
+}
+
+.note-properties-table td {
+  word-break: break-word;
+}

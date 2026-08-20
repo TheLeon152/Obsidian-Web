@@ -1,3 +1,7 @@
+import "./WikiLink.css";
+
+import type { MouseEvent } from "react";
+
 interface WikiLinkProps {
   target: string;
   displayText?: string;
@@ -10,7 +14,7 @@ export function WikiLink({
   onClick,
 }: WikiLinkProps) {
   function handleClick(
-    event: React.MouseEvent<HTMLButtonElement>
+    event: MouseEvent<HTMLButtonElement>
   ) {
     event.preventDefault();
 
@@ -21,14 +25,7 @@ export function WikiLink({
     <button
       type="button"
       onClick={handleClick}
-      style={{
-        border: "none",
-        padding: 0,
-        background: "none",
-        cursor: "pointer",
-        color: "inherit",
-        textDecoration: "underline",
-      }}
+      className="wiki-link"
     >
       {displayText ?? target}
     </button>

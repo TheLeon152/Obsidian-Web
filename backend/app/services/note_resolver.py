@@ -5,35 +5,93 @@ from app.models.vault import NoteReference
 
 class NoteResolver:
 
-    def __init__(self, vault_path: Path):
-        self.vault_path = vault_path
+    def __init__(
+        self,
+        vault_path: Path,
+    ):
+        self.vault_path = (
+            vault_path.resolve()
+        )
 
-    def resolve(self, note_name: str) -> NoteReference:
-        normalized_name = note_name.strip()
+    def resolve(
+        self,
+        target: str,
+    ) -> NoteReference:
 
-        if not normalized_name:
-            raise ValueError("Note name cannot be empty.")
+        normalized_target = (
+            target
+            .strip()
+            .replace("\\", "/")
+        )
+
+        if not normalized_target:
+            raise ValueError(
+                "Note target cannot be empty."
+            )
+
+        # Obsidian erlaubt Links ohne .md
+        if not normalized_target.lower().endswith(
+            ".md"
+        ):
+            normalized_target += ".md"
+
+        # --------------------------------------------------
+        # 1. Exakter relativer Pfad
+        # --------------------------------------------------
+
+        exact_path = (
+            self.vault_path
+            / normalized_target
+        ).resolve()
+
+        if (
+            exact_path.is_relative_to(
+                self.vault_path
+            )
+            and exact_path.is_file()
+            and exact_path.suffix.lower() == ".md"
+        ):
+            return self._to_reference(
+                exact_path
+            )
+
+        # --------------------------------------------------
+        # 2. Nur Dateiname → im gesamten Vault suchen
+        # --------------------------------------------------
+
+        filename = Path(
+            normalized_target
+        ).name
 
         matches = list(
             self.vault_path.rglob(
-                f"{normalized_name}.md"
+                filename
             )
         )
 
         if not matches:
             raise FileNotFoundError(
-                f"Note not found: {normalized_name}"
+                f"Note not found: {target}"
             )
 
         if len(matches) > 1:
             raise ValueError(
-                f"Multiple notes found for: {normalized_name}"
+                f"Multiple notes found for: {target}"
             )
 
-        note_path = matches[0]
+        return self._to_reference(
+            matches[0]
+        )
 
-        relative_path = note_path.relative_to(
-            self.vault_path
+    def _to_reference(
+        self,
+        note_path: Path,
+    ) -> NoteReference:
+
+        relative_path = (
+            note_path.relative_to(
+                self.vault_path
+            )
         )
 
         return NoteReference(

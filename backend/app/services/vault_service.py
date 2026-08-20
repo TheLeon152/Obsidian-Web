@@ -12,14 +12,19 @@ class VaultService:
         return self._build_node(self.vault_path)
 
     def _build_node(self, path: Path) -> VaultNode:
-        relative_path = path.relative_to(self.vault_path)
+        relative_path = path.relative_to(
+            self.vault_path
+        )
 
         if path.is_dir():
             children = [
                 self._build_node(child)
                 for child in sorted(
                     path.iterdir(),
-                    key=lambda p: (not p.is_dir(), p.name.lower())
+                    key=lambda p: (
+                        not p.is_dir(),
+                        p.name.lower(),
+                    ),
                 )
                 if self._should_include(child)
             ]
@@ -27,14 +32,14 @@ class VaultService:
             return VaultNode(
                 name=path.name,
                 type="folder",
-                path=str(relative_path),
+                path=relative_path.as_posix(),
                 children=children,
             )
 
         return VaultNode(
             name=path.name,
             type="file",
-            path=str(relative_path),
+            path=relative_path.as_posix(),
         )
 
     def _should_include(self, path: Path) -> bool:

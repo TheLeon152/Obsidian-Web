@@ -11,12 +11,17 @@ import "highlight.js/styles/github-dark.css";
 import React, { type ReactNode } from "react";
 import { parseObsidianInline } from "../../utils/parseObsidianInline";
 import { VaultImage } from "../VaultImage/VaultImage";
+import type { ResolvedLink } from "../../types/note";
 
 interface MarkdownRendererProps {
   content: string;
 
   onWikiLinkClick: (
     target: string
+  ) => void;
+
+  onNoteClick: (
+    path: string
   ) => void;
 
   onTagClick?: (
@@ -29,6 +34,7 @@ export function MarkdownRenderer({
   content,
   onWikiLinkClick,
   onTagClick,
+  onNoteClick,
 }: MarkdownRendererProps) {
   return (
     <ReactMarkdown
@@ -38,30 +44,44 @@ export function MarkdownRenderer({
       ]}
       rehypePlugins={[rehypeHighlight]}
       components={{
-        p: ({ children }) => (
-          <p>
-            {renderChildren(
-              children,
-              onWikiLinkClick,
-              onTagClick
-            )}
-          </p>
-        ),
+        p: ({ children }) => {
+          console.log(
+            "P CHILDREN:",
+            children
+          );
 
-        li: ({ children }) => (
-          <li>
-            {renderChildren(
-              children,
-              onWikiLinkClick,
-              onTagClick
-            )}
-          </li>
-        ),
+          return (
+            <p>
+              {renderChildren(
+                children,
+                onWikiLinkClick,
+                onTagClick!,
+              )}
+            </p>
+          );
+        },
 
-        a: ({ href, children, ...props }) => {
+        a: ({ href, children }) => {
           const isExternal =
             href?.startsWith("http://") ||
             href?.startsWith("https://");
+
+          function handleClick(
+            event: React.MouseEvent<HTMLAnchorElement>
+          ) {
+            console.log(
+              "MARKDOWN LINK CLICK:",
+              href
+            );
+
+            if (!href || isExternal) {
+              return;
+            }
+
+            event.preventDefault();
+
+            onWikiLinkClick(href);
+          }
 
           return (
             <a
@@ -74,50 +94,14 @@ export function MarkdownRenderer({
                   ? "noopener noreferrer"
                   : undefined
               }
-              {...props}
+              onClick={handleClick}
             >
               {children}
             </a>
           );
         },
-        blockquote: ({ children, node }) => {
-          const properties =
-            (node as any)?.properties;
 
-          const calloutType =
-            properties?.["data-callout"];
-
-          const calloutTitle =
-            properties?.["data-callout-title"];
-
-          if (calloutType) {
-            return (
-              <aside
-                className={`obsidian-callout obsidian-callout-${calloutType}`}
-              >
-                <div className="obsidian-callout-title">
-                  <span className="obsidian-callout-icon">
-                    {getCalloutIcon(calloutType)}
-                  </span>
-
-                  <span>
-                    {calloutTitle}
-                  </span>
-                </div>
-
-                <div className="obsidian-callout-content">
-                  {children}
-                </div>
-              </aside>
-            );
-          }
-
-          return (
-            <blockquote>
-              {children}
-            </blockquote>
-          );
-        },
+        // Rest unverändert
       }}
     >
       {content}
@@ -148,9 +132,9 @@ function renderChildren(
   onWikiLinkClick: (
     target: string
   ) => void,
-  onTagClick?: (
+  onTagClick: (
     tag: string
-  ) => void
+  ) => void,
 ) {
   return React.Children.map(
     children,

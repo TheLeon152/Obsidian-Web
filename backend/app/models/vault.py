@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import Any, Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class VaultNode(BaseModel):
@@ -10,12 +10,38 @@ class VaultNode(BaseModel):
     children: list["VaultNode"] | None = None
 
 
+class NoteReference(BaseModel):
+    name: str
+    path: str
+
+
+class ResolvedLink(BaseModel):
+    target: str
+    path: str
+    name: str
+
+
 class Note(BaseModel):
     name: str
     path: str
     content: str
 
+    tags: list[str] = Field(
+        default_factory=list
+    )
 
-class NoteReference(BaseModel):
-    name: str
-    path: str
+    frontmatter: dict[str, Any] = Field(
+        default_factory=dict
+    )
+
+    links: list[str] = Field(
+        default_factory=list
+    )
+
+    resolved_links: list[ResolvedLink] = Field(
+        default_factory=list
+    )
+
+    backlinks: list[NoteReference] = Field(
+        default_factory=list
+    )

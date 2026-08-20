@@ -102,6 +102,103 @@ function AppRoutes({
   }
 
 
+  /* async function handleNoteClick(
+    target: string
+  ) {
+    try {
+      const normalizedTarget =
+        target
+          .replace(/\\/g, "/")
+          .trim();
+
+      // Links mit einem Pfad werden direkt
+      // als Vault-Pfad behandelt.
+      if (
+        normalizedTarget.includes("/")
+      ) {
+        const path =
+          normalizedTarget.endsWith(".md")
+            ? normalizedTarget
+            : `${normalizedTarget}.md`;
+
+        navigate(
+          `/note/${encodeURI(path)}`
+        );
+
+        return;
+      }
+
+      // Ein einfacher Name wird über den
+      // NoteResolver aufgelöst.
+      const reference =
+        await resolveNote(
+          normalizedTarget
+        );
+
+      navigate(
+        `/note/${encodeURI(reference.path)}`
+      );
+    } catch (error) {
+      console.error(
+        `Could not resolve note link: ${target}`,
+        error
+      );
+    }
+  } */
+
+  async function handleNoteClick(
+    path: string
+  ) {
+    try {
+      const normalizedPath =
+        path
+          .replace(/\\/g, "/")
+          .trim();
+
+      // Direkter Pfad mit Dateiendung
+      if (
+        normalizedPath.endsWith(".md")
+      ) {
+        navigate(
+          `/note/${encodeURI(normalizedPath)}`
+        );
+
+        return;
+      }
+
+      // Pfad mit Slash:
+      // Test1/React -> Test1/React.md
+      if (
+        normalizedPath.includes("/")
+      ) {
+        navigate(
+          `/note/${encodeURI(
+            normalizedPath + ".md"
+          )}`
+        );
+
+        return;
+      }
+
+      // Einfacher Notizname:
+      // React -> tatsächliche Datei auflösen
+      const reference =
+        await resolveNote(
+          normalizedPath
+        );
+
+      navigate(
+        `/note/${encodeURI(reference.path)}`
+      );
+    } catch (error) {
+      console.error(
+        `Could not open note: ${path}`,
+        error
+      );
+    }
+  }
+
+
   async function handleWikiLinkClick(
     target: string
   ) {
@@ -112,8 +209,10 @@ function AppRoutes({
       navigate(
         `/note/${encodeURI(reference.path)}`
       );
-    } catch (error) {
-      console.error(error);
+    } catch {
+      alert(
+        `Die Note "${target}" wurde nicht gefunden.`
+      );
     }
   }
 
@@ -145,6 +244,9 @@ function AppRoutes({
               }
               onTagClick={
                 handleTagClick
+              }
+              onNoteClick={
+                handleNoteClick
               }
             />
           }

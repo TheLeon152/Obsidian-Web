@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.config import settings
 from app.services.tag_service import TagService
+from app.services.vault import vault_indexer
 
 
 router = APIRouter(
@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 tag_service = TagService(
-    settings.vault_path
+    vault_indexer
 )
 
 
@@ -24,7 +24,7 @@ def get_tags():
 
 @router.get("/{tag:path}")
 def get_notes_for_tag(
-    tag: str
+    tag: str,
 ):
     return {
         "tag": tag.lstrip("#"),
