@@ -41,8 +41,10 @@ export function SearchBar({
       query.trim();
 
     if (!trimmedQuery) {
+
       setResults([]);
       setError(null);
+
       return;
     }
 
@@ -78,6 +80,7 @@ export function SearchBar({
           } finally {
 
             setLoading(false);
+
           }
 
         },
@@ -102,6 +105,7 @@ export function SearchBar({
 
     setQuery("");
     setResults([]);
+
   }
 
 
@@ -122,39 +126,52 @@ export function SearchBar({
 
 
       {query.trim() && (
+
         <div className="search-results">
 
           {loading && (
+
             <div className="search-state">
               Searching...
             </div>
+
           )}
 
 
           {!loading &&
             error && (
-              <div className="search-state search-error">
+
+              <div
+                className={
+                  "search-state search-error"
+                }
+              >
                 {error}
               </div>
+
             )}
 
 
           {!loading &&
             !error &&
             results.length === 0 && (
+
               <div className="search-state">
                 No notes found.
               </div>
+
             )}
 
 
           {!loading &&
             !error &&
             results.length > 0 && (
+
               <ul className="search-result-list">
 
                 {results.map(
                   (result) => (
+
                     <li
                       key={result.path}
                       className="search-result"
@@ -167,27 +184,54 @@ export function SearchBar({
                             result
                           )
                         }
-                        className="search-result-button"
+                        className={
+                          "search-result-button"
+                        }
                       >
 
-                        <span className="search-result-name">
+                        <span
+                          className={
+                            "search-result-name"
+                          }
+                        >
                           {result.name}
                         </span>
 
-                        <span className="search-result-path">
+
+                        <span
+                          className={
+                            "search-result-path"
+                          }
+                        >
                           {result.path}
                         </span>
+
+
+                        {result.context && (
+
+                          <span
+                            className={
+                              "search-result-context"
+                            }
+                          >
+                            {result.context}
+                          </span>
+
+                        )}
 
                       </button>
 
                     </li>
+
                   )
                 )}
 
               </ul>
+
             )}
 
         </div>
+
       )}
 
     </div>

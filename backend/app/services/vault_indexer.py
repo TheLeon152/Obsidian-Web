@@ -182,6 +182,8 @@ class VaultIndexer:
                     name=path.stem,
                     path=relative_path,
 
+                    content=content,
+
                     tags=sorted(tags),
 
                     frontmatter=frontmatter,

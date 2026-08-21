@@ -5,6 +5,7 @@ export interface SearchResult {
   name: string;
   path: string;
   tags: string[];
+  context: string | null;
 }
 
 

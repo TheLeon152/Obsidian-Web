@@ -57,6 +57,8 @@ class IndexedNote(BaseModel):
     name: str
     path: str
 
+    content: str = ""
+
     tags: list[str] = Field(
         default_factory=list
     )

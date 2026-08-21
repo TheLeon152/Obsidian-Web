@@ -3,6 +3,9 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 2.5rem 3rem 4rem;
+
+  /* Verhindert, dass lange Inhalte das Layout sprengen */
+  min-width: 0;
 }
 
 
@@ -29,6 +32,8 @@
 
 .note-header {
   margin-bottom: 1.25rem;
+
+  min-width: 0;
 }
 
 .note-title {
@@ -39,6 +44,10 @@
   line-height: 1.2;
 
   letter-spacing: -0.02em;
+
+  /* Lange Dateinamen umbrechen */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .note-path {
@@ -47,6 +56,10 @@
   color: var(--text-muted, #888);
 
   font-size: 0.85rem;
+
+  /* Lange Pfade umbrechen */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 
@@ -103,8 +116,22 @@
 ========================= */
 
 .note-content {
+  min-width: 0;
+
   line-height: 1.7;
+
+  /*
+   * Wichtig für lange Markdown-Inhalte:
+   * Inhalte dürfen nicht breiter als ihr Container werden.
+   */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
+
+
+/* =========================
+   Headings
+========================= */
 
 .note-content h1,
 .note-content h2,
@@ -116,6 +143,12 @@
   margin-bottom: 0.75rem;
 
   line-height: 1.3;
+
+  /*
+   * Verhindert Overflow bei langen Überschriften.
+   */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .note-content h1 {
@@ -130,18 +163,57 @@
   font-size: 1.3rem;
 }
 
+
+/* =========================
+   Paragraphs
+========================= */
+
 .note-content p {
   margin: 1rem 0;
+
+  /*
+   * Lange URLs, IDs oder Wörter umbrechen.
+   */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
+
+
+/* =========================
+   Links
+========================= */
+
+.note-content a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* =========================
+   Lists
+========================= */
 
 .note-content ul,
 .note-content ol {
   padding-left: 1.5rem;
+
+  min-width: 0;
 }
 
 .note-content li {
   margin: 0.35rem 0;
+
+  /*
+   * Besonders wichtig für lange Task-Texte.
+   */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
+
+
+/* =========================
+   Images
+========================= */
 
 .note-content img {
   display: block;
@@ -160,13 +232,19 @@
 ========================= */
 
 .note-content table {
+  display: block;
+
   width: 100%;
 
   margin: 1.5rem 0;
 
   border-collapse: collapse;
 
-  overflow: hidden;
+  /*
+   * Tabellen dürfen horizontal scrollen,
+   * anstatt das gesamte Layout zu sprengen.
+   */
+  overflow-x: auto;
 
   border: 1px solid
     rgba(127, 127, 127, 0.2);
@@ -182,12 +260,90 @@
     rgba(127, 127, 127, 0.15);
 
   text-align: left;
+
+  /*
+   * Lange Inhalte in Tabellen umbrechen.
+   */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .note-content th {
   font-weight: 600;
 
   background: rgba(127, 127, 127, 0.08);
+}
+
+
+/* =========================
+   Code
+========================= */
+
+/*
+ * Inline-Code
+ */
+.note-content code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/*
+ * Codeblöcke
+ *
+ * Lange Codezeilen dürfen horizontal
+ * gescrollt werden.
+ */
+.note-content pre {
+  max-width: 100%;
+
+  margin: 1.5rem 0;
+
+  padding: 1rem;
+
+  overflow-x: auto;
+
+  border-radius: 8px;
+
+  /*
+   * Wichtig:
+   * Code soll innerhalb des Blocks bleiben.
+   */
+  white-space: pre;
+
+  box-sizing: border-box;
+}
+
+
+/*
+ * Code innerhalb eines Codeblocks
+ */
+.note-content pre code {
+  overflow-wrap: normal;
+  word-break: normal;
+
+  white-space: pre;
+}
+
+
+/* =========================
+   Blockquotes
+========================= */
+
+.note-content blockquote {
+  margin: 1.5rem 0;
+
+  padding: 0.75rem 1rem;
+
+  border-left: 4px solid
+    rgba(127, 127, 127, 0.4);
+
+  background: rgba(127, 127, 127, 0.05);
+
+  color: var(--text-muted, #888);
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 
@@ -199,8 +355,45 @@
   margin: 2.5rem 0;
 
   border: 0;
+
   border-top: 1px solid
     rgba(127, 127, 127, 0.2);
+}
+
+
+/* =========================
+   Task Lists
+========================= */
+
+.note-content input[type="checkbox"] {
+  margin-right: 0.5rem;
+
+  vertical-align: middle;
+}
+
+
+/*
+ * Unsere interaktiven TaskRows
+ */
+.note-content .markdown-task-item {
+  list-style: none;
+
+  margin: 0.4rem 0;
+
+  padding-left: 0;
+}
+
+.note-content .markdown-task-item::marker {
+  content: "";
+}
+
+
+/* =========================
+   Callouts
+========================= */
+
+.note-content .callout {
+  margin: 1.5rem 0;
 }
 
 
@@ -251,6 +444,35 @@
 
 .note-navigation-section li {
   margin-bottom: 0.25rem;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* =========================
+   General Markdown Safety
+========================= */
+
+/*
+ * Sehr lange Wörter, Hashes, IDs,
+ * Dateinamen etc. dürfen nicht das
+ * Layout verbreitern.
+ */
+.note-content * {
+  max-width: 100%;
+}
+
+
+/*
+ * Flex- und Grid-Kinder müssen min-width: 0
+ * bekommen, damit sie tatsächlich schrumpfen.
+ */
+.note-content,
+.note-content > *,
+.note-content li,
+.note-content p {
+  min-width: 0;
 }
 
 
@@ -259,13 +481,36 @@
 ========================= */
 
 @media (max-width: 700px) {
+
   .note-viewer {
     padding: 1.5rem 1.25rem 3rem;
   }
 
+
   .note-title {
     font-size: 1.8rem;
   }
+
+
+  .note-content {
+    line-height: 1.65;
+  }
+
+
+  .note-content h1 {
+    font-size: 1.7rem;
+  }
+
+
+  .note-content h2 {
+    font-size: 1.4rem;
+  }
+
+
+  .note-content h3 {
+    font-size: 1.2rem;
+  }
+
 
   .note-navigation {
     grid-template-columns: 1fr;

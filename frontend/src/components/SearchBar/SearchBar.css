@@ -92,3 +92,21 @@
 .search-error {
   color: #b00020;
 }
+
+.search-result-context {
+  display: block;
+
+  margin-top: 0.4rem;
+
+  color: var(--text-muted, #888);
+
+  font-size: 0.85rem;
+  line-height: 1.45;
+
+  /*
+   * Verhindert, dass lange URLs oder Wörter
+   * das Suchfenster verbreitern.
+   */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
