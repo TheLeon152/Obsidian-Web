@@ -5,6 +5,8 @@ import {
 
 import type { VaultNode } from "../../types/vault";
 
+import "./FileTree.css";
+
 
 interface FileTreeNodeProps {
   node: VaultNode;
@@ -104,127 +106,52 @@ export function FileTreeNode({
 
 
   return (
-    <div>
+    <div className="file-tree-node">
 
       <div
-        onClick={
-          handleClick
+        className={
+          `file-tree-node-row${
+            isActive
+              ? " active"
+              : ""
+          }`
         }
+        onClick={handleClick}
         style={{
-          display: "flex",
-          alignItems: "center",
-
           paddingLeft:
             `${level * 16}px`,
-
-          paddingTop:
-            "5px",
-
-          paddingBottom:
-            "5px",
-
-          paddingRight:
-            "4px",
-
-          cursor:
-            isFolder
-              ? "pointer"
-              : "default",
-
-          userSelect:
-            "none",
-
-          borderRadius:
-            "5px",
-
-          background:
-            isActive
-              ? "#e8e8e8"
-              : "transparent",
-
-          fontWeight:
-            isActive
-              ? 600
-              : 400,
         }}
       >
 
         {isFolder && (
-
-          <span
-            style={{
-              width: "18px",
-              display: "inline-block",
-            }}
-          >
+          <span className="file-tree-expand-icon">
             {isExpanded
               ? "▼"
               : "▶"}
           </span>
-
         )}
 
 
         {!isFolder && (
-
-          <span
-            style={{
-              width: "18px",
-              marginLeft: "0",
-            }}
-          >
+          <span className="file-tree-icon">
             📄
           </span>
-
         )}
 
 
-        <span
-          style={{
-            marginLeft: "6px",
-            overflow: "hidden",
-            textOverflow:
-              "ellipsis",
-            whiteSpace:
-              "nowrap",
-          }}
-        >
+        <span className="file-tree-name">
           {node.name}
         </span>
 
 
         {isFolder && (
-
           <button
             type="button"
-            onClick={
-              handleFolderOpen
-            }
-            style={{
-              marginLeft:
-                "auto",
-
-              border:
-                "none",
-
-              background:
-                "transparent",
-
-              cursor:
-                "pointer",
-
-              fontSize:
-                "12px",
-
-              opacity:
-                isActive
-                  ? 1
-                  : 0.6,
-            }}
+            className="file-tree-open-button"
+            onClick={handleFolderOpen}
           >
             Öffnen
           </button>
-
         )}
 
       </div>
@@ -238,33 +165,22 @@ export function FileTreeNode({
 
             {node.children.map(
               (child) => (
-
                 <FileTreeNode
-                  key={
-                    child.path
-                  }
-
-                  node={
-                    child
-                  }
-
+                  key={child.path}
+                  node={child}
                   level={
                     level + 1
                   }
-
                   onFileClick={
                     onFileClick
                   }
-
                   onFolderClick={
                     onFolderClick
                   }
-
                   activePath={
                     activePath
                   }
                 />
-
               )
             )}
 

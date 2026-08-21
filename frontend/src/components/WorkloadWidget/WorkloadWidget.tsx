@@ -52,9 +52,15 @@ export function WorkloadWidget() {
 
   if (loading) {
     return (
-      <section>
-        <h2>📊 Arbeitslast</h2>
-        <p>Loading...</p>
+      <section className="workload-widget">
+        <div className="workload-header">
+          <div>
+            <h2>📊 Arbeitslast</h2>
+            <span className="workload-period">
+              wird geladen...
+            </span>
+          </div>
+        </div>
       </section>
     );
   }
@@ -62,9 +68,19 @@ export function WorkloadWidget() {
 
   if (error) {
     return (
-      <section>
-        <h2>📊 Arbeitslast</h2>
-        <p>Error: {error}</p>
+      <section className="workload-widget">
+        <div className="workload-header">
+          <div>
+            <h2>📊 Arbeitslast</h2>
+            <span className="workload-period">
+              Fehler beim Laden
+            </span>
+          </div>
+        </div>
+
+        <p className="workload-error">
+          {error}
+        </p>
       </section>
     );
   }

@@ -34,50 +34,52 @@ export function TaskDashboard() {
     useState<string | null>(null);
 
 
-  useEffect(() => {
+  async function loadDashboard() {
 
-    async function loadDashboard() {
+    try {
 
-      try {
+      setError(null);
 
-        const [
-          today,
-          upcoming,
-          next,
-          waiting,
-          blocked,
-        ] = await Promise.all([
-          fetchTodayTasks(),
-          fetchUpcomingTasks(7),
-          fetchNextTasks(10),
-          fetchWaitingTasks(),
-          fetchBlockedTasks(),
-        ]);
+      const [
+        today,
+        upcoming,
+        next,
+        waiting,
+        blocked,
+      ] = await Promise.all([
+        fetchTodayTasks(),
+        fetchUpcomingTasks(7),
+        fetchNextTasks(10),
+        fetchWaitingTasks(),
+        fetchBlockedTasks(),
+      ]);
 
 
-        setData({
-          today,
-          upcoming,
-          next,
-          waiting,
-          blocked,
-        });
+      setData({
+        today,
+        upcoming,
+        next,
+        waiting,
+        blocked,
+      });
 
-      } catch (error) {
+    } catch (error) {
 
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Unknown error"
-        );
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Unknown error"
+      );
 
-      } finally {
+    } finally {
 
-        setLoading(false);
+      setLoading(false);
 
-      }
     }
+  }
 
+
+  useEffect(() => {
 
     loadDashboard();
 
@@ -85,29 +87,35 @@ export function TaskDashboard() {
 
 
   if (loading) {
+
     return (
       <div>
         Loading task dashboard...
       </div>
     );
+
   }
 
 
   if (error) {
+
     return (
       <div>
         Error: {error}
       </div>
     );
+
   }
 
 
   if (!data) {
+
     return (
       <div>
         Task dashboard could not be loaded.
       </div>
     );
+
   }
 
 
@@ -125,6 +133,7 @@ export function TaskDashboard() {
       >
         <TaskTable
           tasks={data.today}
+          onTaskUpdated={loadDashboard}
         />
       </TaskSection>
 
@@ -135,6 +144,7 @@ export function TaskDashboard() {
       >
         <TaskTable
           tasks={data.upcoming}
+          onTaskUpdated={loadDashboard}
         />
       </TaskSection>
 
@@ -145,6 +155,7 @@ export function TaskDashboard() {
       >
         <TaskTable
           tasks={data.next}
+          onTaskUpdated={loadDashboard}
         />
       </TaskSection>
 
@@ -156,6 +167,7 @@ export function TaskDashboard() {
         <TaskTable
           tasks={data.waiting}
           showWaiting
+          onTaskUpdated={loadDashboard}
         />
       </TaskSection>
 
@@ -167,6 +179,7 @@ export function TaskDashboard() {
         <TaskTable
           tasks={data.blocked}
           showBlocked
+          onTaskUpdated={loadDashboard}
         />
       </TaskSection>
 

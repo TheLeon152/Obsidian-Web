@@ -156,7 +156,7 @@ export function SearchBar({
             !error &&
             results.length === 0 && (
 
-              <div className="search-state">
+              <div className="search-no-results">
                 No notes found.
               </div>
 

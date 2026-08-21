@@ -1,0 +1,67 @@
+.main-navigation {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  margin-top: 16px;
+
+  margin-bottom: 20px;
+}
+
+
+.navigation-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 8px 10px;
+
+  border-radius: 6px;
+
+  color: var(--text-normal);
+
+  text-decoration: none;
+
+  font-size: 0.9rem;
+
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+
+.navigation-item:hover {
+  background:
+    var(--background-modifier-hover);
+
+  color:
+    var(--text-normal);
+}
+
+
+.navigation-item-active {
+  background:
+    var(--background-modifier-active-hover);
+
+  color:
+    var(--text-accent);
+
+  font-weight: 600;
+}
+
+
+.navigation-icon {
+  width: 20px;
+
+  text-align: center;
+
+  flex-shrink: 0;
+}

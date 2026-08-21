@@ -1,123 +1,139 @@
 .daily-page {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-
+  width: 100%;
   max-width: 1400px;
+
   margin: 0 auto;
+  padding: 0;
+
+  color: #e5e5e5;
 }
 
+
+/* =========================================
+   Header
+   ========================================= */
+
+.daily-header {
+  margin-bottom: 24px;
+}
 
 .daily-header h1 {
-  margin-bottom: 4px;
-}
+  margin: 0 0 6px 0;
 
+  color: #ffffff;
+
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: left;
+}
 
 .daily-header p {
   margin: 0;
 
-  color: #777;
+  color: #888;
+
+  font-size: 0.95rem;
+  text-align: left;
 }
 
+
+/* =========================================
+   Kalender
+   ========================================= */
+
+.daily-calendar-section {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+
+/* =========================================
+   Zwei-Spalten-Layout
+   ========================================= */
 
 .daily-grid {
   display: grid;
 
   grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+    minmax(0, 2fr)
+    minmax(280px, 1fr);
 
   gap: 20px;
+
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 
+/* =========================================
+   Cards
+   ========================================= */
+
 .daily-card {
+  width: 100%;
+  min-width: 0;
+
   padding: 20px;
 
-  border: 1px solid #ddd;
+  background: #181818;
+  border: 1px solid #2a2a2a;
   border-radius: 10px;
 
-  background: white;
+  color: #e5e5e5;
 }
 
 
 .daily-card h2 {
-  margin-top: 0;
+  margin: 0 0 16px 0;
+
+  color: #ffffff;
+
+  font-size: 1.2rem;
+  font-weight: 600;
+
+  text-align: left;
 }
 
+
+/* =========================================
+   Empty States
+   ========================================= */
+
+.empty-state {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 0.9rem;
+  font-style: italic;
+
+  text-align: left;
+}
+
+
+/* =========================================
+   Task Lists
+   ========================================= */
 
 .task-list {
   display: flex;
+
   flex-direction: column;
 
   gap: 8px;
-}
 
-
-.task-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 12px;
-
-  padding: 10px;
-
-  border-radius: 6px;
-
-  background: #f5f5f5;
-}
-
-
-.task-row-column {
-  align-items: flex-start;
-
-  flex-direction: column;
-}
-
-
-.task-text {
-  flex: 1;
-}
-
-
-.task-priority {
-  font-size: 0.8rem;
-  font-weight: 600;
-}
-
-
-.priority-high {
-  color: #e74c3c;
-}
-
-
-.priority-medium {
-  color: #f39c12;
-}
-
-
-.priority-low {
-  color: #2ecc71;
-}
-
-
-.task-table {
   width: 100%;
-
-  border-collapse: collapse;
 }
 
 
-.task-table th,
-.task-table td {
-  padding: 10px;
+/* =========================================
+   Responsive
+   ========================================= */
 
-  text-align: left;
+@media (max-width: 900px) {
 
-  border-bottom: 1px solid #ddd;
-}
+  .daily-grid {
+    grid-template-columns: 1fr;
+  }
 
-
-.empty-state {
-  color: #777;
 }

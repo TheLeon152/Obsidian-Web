@@ -1,0 +1,144 @@
+.file-tree {
+  margin-top: 16px;
+}
+
+
+/* =========================
+   Tree node
+   ========================= */
+
+.file-tree-node {
+  width: 100%;
+}
+
+
+.file-tree-node-row {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  min-height: 30px;
+
+  border-radius: 5px;
+
+  padding-top: 3px;
+  padding-bottom: 3px;
+  padding-right: 4px;
+
+  color: #d6d6d6;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+
+.file-tree-node-row:hover {
+  background: #242424;
+}
+
+
+/* =========================
+   Active folder
+   ========================= */
+
+.file-tree-node-row.active {
+  background: #2c2c2c;
+  color: #ffffff;
+}
+
+
+/* =========================
+   Expand icon
+   ========================= */
+
+.file-tree-expand-icon {
+  width: 18px;
+
+  flex-shrink: 0;
+
+  text-align: center;
+
+  font-size: 10px;
+
+  color: #999;
+}
+
+
+/* =========================
+   File / folder icon
+   ========================= */
+
+.file-tree-icon {
+  width: 20px;
+
+  flex-shrink: 0;
+
+  text-align: center;
+}
+
+
+/* =========================
+   Name
+   ========================= */
+
+.file-tree-name {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  margin-left: 6px;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   Open button
+   ========================= */
+
+.file-tree-open-button {
+  margin-left: auto;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 4px;
+
+  padding: 3px 6px;
+
+  background: transparent;
+
+  color: #999;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  opacity: 0;
+
+  transition:
+    opacity 0.12s ease,
+    background 0.12s ease,
+    color 0.12s ease;
+}
+
+
+.file-tree-node-row:hover
+.file-tree-open-button {
+  opacity: 1;
+}
+
+
+.file-tree-open-button:hover {
+  background: #3a3a3a;
+  color: #fff;
+}

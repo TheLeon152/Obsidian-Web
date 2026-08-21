@@ -1,9 +1,22 @@
-import type { ReactNode } from "react";
+import type {
+  ReactNode,
+} from "react";
 
-import { FileTree } from "../components/FileTree/FileTree";
-import type { VaultNode } from "../types/vault";
+import {
+  FileTree,
+} from "../components/FileTree/FileTree";
 
-import { SearchBar } from "../components/SearchBar/SearchBar";
+import type {
+  VaultNode,
+} from "../types/vault";
+
+import {
+  SearchBar,
+} from "../components/SearchBar/SearchBar";
+
+import {
+  Navigation,
+} from "../components/Navigation/Navigation";
 
 
 interface VaultLayoutProps {
@@ -26,8 +39,6 @@ interface VaultLayoutProps {
   onFolderClick: (
     path: string
   ) => void;
-
-  activePath?: string;
 }
 
 
@@ -39,24 +50,49 @@ export function VaultLayout({
   children,
   onSearchNoteClick,
   onFolderClick,
-  activePath,
 }: VaultLayoutProps) {
+
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "300px 1fr",
+
+        gridTemplateColumns:
+          "300px 1fr",
+
         height: "100vh",
       }}
     >
+
       <aside
         style={{
-          borderRight: "1px solid #ddd",
+          borderRight:
+            "1px solid var(--background-modifier-border)",
+
           padding: "16px",
+
           overflowY: "auto",
+
+          background:
+            "var(--background-secondary)",
         }}
       >
-        <h2>Vault</h2>
+
+        <h2>
+          Obsidian Web
+        </h2>
+
+
+        {/* =====================================================
+            Hauptnavigation
+        ===================================================== */}
+
+        <Navigation />
+
+
+        {/* =====================================================
+            Refresh
+        ===================================================== */}
 
         <button
           type="button"
@@ -68,26 +104,52 @@ export function VaultLayout({
             : "↻ Refresh"}
         </button>
 
+
+        {/* =====================================================
+            Suche
+        ===================================================== */}
+
         <SearchBar
-          onNoteClick={onSearchNoteClick}
+          onNoteClick={
+            onSearchNoteClick
+          }
         />
+
+
+        {/* =====================================================
+            Vault
+        ===================================================== */}
+
+        <h3>
+          Vault
+        </h3>
+
 
         <FileTree
           tree={tree}
-          onFileClick={onFileClick}
-          onFolderClick={onFolderClick}
-          activePath={activePath}
+          onFileClick={
+            onFileClick
+          }
+          onFolderClick={
+            onFolderClick
+          }
         />
+
       </aside>
+
 
       <main
         style={{
           padding: "32px",
+
           overflowY: "auto",
         }}
       >
+
         {children}
+
       </main>
+
     </div>
   );
 }

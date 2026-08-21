@@ -1,18 +1,53 @@
 .workload-widget {
+  width: 100%;
+  height: 100%;
+
   padding: 20px;
-  border: 1px solid #ddd;
+
+  background: #181818;
+  border: 1px solid #2a2a2a;
   border-radius: 10px;
-  background: white;
+
+  color: #e5e5e5;
+
+  text-align: left;
+}
+
+
+.workload-widget h2,
+.workload-widget h3 {
+  margin-top: 0;
+
+  color: #ffffff;
+
+  text-align: left;
 }
 
 
 .workload-header {
-  margin-bottom: 20px;
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
 }
 
 
 .workload-header h2 {
   margin: 0;
+
+  color: var(--text-normal);
+}
+
+
+.workload-period {
+  display: block;
+
+  margin-top: 4px;
+
+  color: var(--text-muted);
+
+  font-size: 0.8rem;
 }
 
 
@@ -24,47 +59,112 @@
 
 .workload-stats {
   display: grid;
-  grid-template-columns:
-    repeat(4, 1fr);
 
-  gap: 12px;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-top: 16px;
 }
 
 
 .workload-stat {
   display: flex;
+
   flex-direction: column;
+
   gap: 4px;
 
   padding: 12px;
 
-  border-radius: 8px;
-  background: #f5f5f5;
+  background:
+    var(--background-primary);
+
+  border:
+    1px solid
+    var(--background-modifier-border);
+
+  border-radius: 6px;
+
+  color: var(--text-normal);
 }
 
 
 .workload-stat span {
+  color: var(--text-muted);
+
   font-size: 0.8rem;
-  color: #777;
+
+  text-align: left;
 }
 
 
 .workload-stat strong {
-  font-size: 1.4rem;
+  color: var(--text-normal);
+
+  font-size: 1.3rem;
+
+  font-weight: 600;
+
+  text-align: left;
 }
 
 
 .workload-assessment {
   display: flex;
+
   align-items: center;
+
+  justify-content: space-between;
 
   gap: 12px;
 
-  margin-top: 20px;
+  margin-top: 12px;
+
+  color: var(--text-normal);
+}
+
+
+.workload-assessment strong {
+  color: var(--text-normal);
+
+  font-size: 0.9rem;
+
+  white-space: nowrap;
 }
 
 
 .workload-bar {
-  font-family: monospace;
+  margin-top: 16px;
+
+  padding: 10px 12px;
+
+  background:
+    var(--background-primary);
+
+  border:
+    1px solid
+    var(--background-modifier-border);
+
+  border-radius: 6px;
+
+  color:
+    var(--interactive-accent);
+
+  font-family:
+    var(--font-monospace);
+
+  font-size: 0.9rem;
+
   letter-spacing: 1px;
+
+  overflow: hidden;
+}
+
+.workload-widget p,
+.workload-widget span {
+  color: #aaa;
+
+  text-align: left;
 }

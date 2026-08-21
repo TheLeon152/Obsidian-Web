@@ -25,6 +25,8 @@ import "highlight.js/styles/github-dark.css";
 
 import { parseObsidianInline } from "../../utils/parseObsidianInline";
 
+import "./MarkdownRenderer.css";
+
 
 interface MarkdownRendererProps {
   content: string;

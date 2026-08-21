@@ -1,7 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { getTodayEvents } from "../../api/calendar";
 import type { CalendarEvent } from "../../types/calendar";
+
+import "./DailyCalendar.css";
 
 
 interface PositionedEvent {
@@ -24,21 +30,35 @@ export function DailyCalendar() {
   const [error, setError] =
     useState<string | null>(null);
 
-    const [currentTime, setCurrentTime] =
+  const [currentTime, setCurrentTime] =
     useState(new Date());
 
-    useEffect(() => {
 
-        const interval = window.setInterval(() => {
-            setCurrentTime(new Date());
-        }, 60_000);
+  /*
+   * ============================================================
+   * Aktuelle Uhrzeit aktualisieren
+   * ============================================================
+   */
 
-        return () => {
-            window.clearInterval(interval);
-        };
+  useEffect(() => {
 
-    }, []);
+    const interval =
+      window.setInterval(() => {
+        setCurrentTime(new Date());
+      }, 60_000);
 
+    return () => {
+      window.clearInterval(interval);
+    };
+
+  }, []);
+
+
+  /*
+   * ============================================================
+   * Kalender laden
+   * ============================================================
+   */
 
   useEffect(() => {
 
@@ -65,6 +85,7 @@ export function DailyCalendar() {
       } finally {
 
         setLoading(false);
+
       }
     }
 
@@ -73,6 +94,12 @@ export function DailyCalendar() {
 
   }, []);
 
+
+  /*
+   * ============================================================
+   * Ganztägige / normale Termine
+   * ============================================================
+   */
 
   const allDayEvents =
     useMemo(
@@ -103,45 +130,52 @@ export function DailyCalendar() {
   const positionedEvents =
     useMemo<PositionedEvent[]>(() => {
 
-      const items = normalEvents.map(
-        event => {
+      const items =
+        normalEvents.map(
+          event => {
 
-          const start =
-            new Date(event.start);
+            const start =
+              new Date(event.start);
 
-          const end =
-            event.end
-              ? new Date(event.end)
-              : new Date(
-                  start.getTime()
-                  + 30 * 60 * 1000
-                );
-
-
-          const startMinutes =
-            start.getHours() * 60
-            + start.getMinutes()
-            + start.getSeconds() / 60;
+            const end =
+              event.end
+                ? new Date(event.end)
+                : new Date(
+                    start.getTime()
+                    + 30 * 60 * 1000
+                  );
 
 
-          const endMinutes =
-            end.getHours() * 60
-            + end.getMinutes()
-            + end.getSeconds() / 60;
+            const startMinutes =
+              start.getHours() * 60
+              + start.getMinutes()
+              + start.getSeconds() / 60;
 
 
-          return {
-            event,
-            start: startMinutes,
-            end: Math.max(
-              endMinutes,
-              startMinutes + 20
-            ),
-            column: 0,
-            columnCount: 1,
-          };
-        }
-      );
+            const endMinutes =
+              end.getHours() * 60
+              + end.getMinutes()
+              + end.getSeconds() / 60;
+
+
+            return {
+              event,
+
+              start:
+                startMinutes,
+
+              end:
+                Math.max(
+                  endMinutes,
+                  startMinutes + 20
+                ),
+
+              column: 0,
+
+              columnCount: 1,
+            };
+          }
+        );
 
 
       /*
@@ -150,8 +184,8 @@ export function DailyCalendar() {
        * ----------------------------------------------------------
        */
 
-      const columns: PositionedEvent[][] =
-        [];
+      const columns:
+        PositionedEvent[][] = [];
 
 
       for (const item of items) {
@@ -197,8 +231,8 @@ export function DailyCalendar() {
        * ----------------------------------------------------------
        */
 
-      const groups: PositionedEvent[][] =
-        [];
+      const groups:
+        PositionedEvent[][] = [];
 
 
       for (const item of items) {
@@ -244,8 +278,10 @@ export function DailyCalendar() {
 
 
         for (const item of group) {
+
           item.columnCount =
             columnCount;
+
         }
       }
 
@@ -255,24 +291,39 @@ export function DailyCalendar() {
     }, [normalEvents]);
 
 
+  /*
+   * ============================================================
+   * Zustände
+   * ============================================================
+   */
+
   if (loading) {
 
     return (
-      <div>
+      <div className="daily-calendar-state">
         Kalender wird geladen...
       </div>
     );
+
   }
 
 
   if (error) {
 
     return (
-      <div>
+      <div className="daily-calendar-state daily-calendar-error">
         ❌ {error}
       </div>
     );
+
   }
+
+
+  /*
+   * ============================================================
+   * Aktuelle Uhrzeit
+   * ============================================================
+   */
 
   const currentMinutes =
     currentTime.getHours() * 60
@@ -280,28 +331,21 @@ export function DailyCalendar() {
     + currentTime.getSeconds() / 60;
 
 
+  /*
+   * ============================================================
+   * Render
+   * ============================================================
+   */
+
   return (
-    <div
-      style={{
-        width: "100%",
-      }}
-    >
+    <div className="daily-calendar-container">
 
-      {/* ========================================================
+      {/* ======================================================
           Datum
-      ======================================================== */}
+      ====================================================== */}
 
-      <div
-        style={{
-          marginBottom: "16px",
+      <div className="calendar-date">
 
-          color:
-            "var(--text-muted)",
-
-          fontSize:
-            "0.9rem",
-        }}
-      >
         {new Date().toLocaleDateString(
           "de-DE",
           {
@@ -311,46 +355,24 @@ export function DailyCalendar() {
             year: "numeric",
           }
         )}
+
       </div>
 
 
-      {/* ========================================================
+      {/* ======================================================
           Ganztägige Termine
-      ======================================================== */}
+      ====================================================== */}
 
       {allDayEvents.length > 0 && (
 
-        <div
-          style={{
-            marginBottom: "16px",
-            marginLeft: "65px",
-          }}
-        >
+        <div className="calendar-all-day">
 
           {allDayEvents.map(
             (event, index) => (
 
               <div
                 key={`${event.summary}-${index}`}
-                style={{
-                  background:
-                    "var(--interactive-accent)",
-
-                  color:
-                    "var(--text-on-accent)",
-
-                  borderRadius:
-                    "5px",
-
-                  padding:
-                    "6px 10px",
-
-                  marginBottom:
-                    "4px",
-
-                  fontSize:
-                    "0.85rem",
-                }}
+                className="calendar-all-day-event"
               >
                 {event.summary}
               </div>
@@ -363,23 +385,15 @@ export function DailyCalendar() {
       )}
 
 
-      {/* ========================================================
+      {/* ======================================================
           Kalender
-      ======================================================== */}
+      ====================================================== */}
 
-      <div
-        style={{
-          position: "relative",
+      <div className="daily-calendar">
 
-          height: "1440px",
-
-          width: "100%",
-        }}
-      >
-
-        {/* ======================================================
+        {/* ====================================================
             Stunden
-        ====================================================== */}
+        ==================================================== */}
 
         {Array.from(
           { length: 24 },
@@ -387,53 +401,19 @@ export function DailyCalendar() {
 
             <div
               key={hour}
+              className="calendar-hour"
               style={{
-                position:
-                  "absolute",
-
-                top:
-                  `${hour * 60}px`,
-
-                left: 0,
-                right: 0,
-
-                height: "60px",
-
-                borderTop:
-                  "1px solid var(--background-modifier-border)",
+                top: `${hour * 60}px`,
               }}
             >
 
-              <div
-                style={{
-                  position:
-                    "absolute",
+              <div className="calendar-hour-label">
 
-                  left: 0,
-
-                  top:
-                    "-9px",
-
-                  width:
-                    "55px",
-
-                  paddingRight:
-                    "10px",
-
-                  textAlign:
-                    "right",
-
-                  color:
-                    "var(--text-muted)",
-
-                  fontSize:
-                    "0.75rem",
-                }}
-              >
                 {String(hour).padStart(
                   2,
                   "0"
                 )}:00
+
               </div>
 
             </div>
@@ -442,9 +422,9 @@ export function DailyCalendar() {
         )}
 
 
-        {/* ======================================================
+        {/* ====================================================
             Halb-Stunden-Linien
-        ====================================================== */}
+        ==================================================== */}
 
         {Array.from(
           { length: 24 },
@@ -452,23 +432,10 @@ export function DailyCalendar() {
 
             <div
               key={`half-${hour}`}
+              className="calendar-half-hour"
               style={{
-                position:
-                  "absolute",
-
                 top:
                   `${hour * 60 + 30}px`,
-
-                left:
-                  "65px",
-
-                right: 0,
-
-                borderTop:
-                  "1px dashed var(--background-modifier-border-hover)",
-
-                pointerEvents:
-                  "none",
               }}
             />
 
@@ -476,71 +443,30 @@ export function DailyCalendar() {
         )}
 
 
-        {/* ======================================================
+        {/* ====================================================
             Kalenderfläche
-        ====================================================== */}
+        ==================================================== */}
 
-        <div
-          style={{
-            position:
-              "absolute",
-
-            top: 0,
-            bottom: 0,
-
-            left:
-              "65px",
-
-            right: 0,
-
-            borderLeft:
-              "1px solid var(--background-modifier-border)",
-          }}
-        />
+        <div className="calendar-surface" />
 
 
-        {/* ======================================================
+        {/* ====================================================
             Aktuelle Uhrzeit
-        ====================================================== */}
+        ==================================================== */}
 
         <div
-        style={{
-            position: "absolute",
-
+          className="calendar-current-time"
+          style={{
             top: `${currentMinutes}px`,
-            left: "65px",
-            right: 0,
-
-            height: "4px",
-
-            backgroundColor: "red",
-
-            zIndex: 9999,
-
-            pointerEvents: "none",
-        }}
+          }}
         >
-        <div
-            style={{
-            position: "absolute",
-
-            left: "-6px",
-            top: "-3px",
-
-            width: "10px",
-            height: "10px",
-
-            borderRadius: "50%",
-
-            backgroundColor: "red",
-            }}
-        />
+          <div className="calendar-current-time-dot" />
         </div>
 
 
-        {/* ======================================================
+        {/* ====================================================
             Termine
-        ====================================================== */}
+        ==================================================== */}
 
         {positionedEvents.map(
           (item, index) => {
@@ -559,9 +485,9 @@ export function DailyCalendar() {
 
 
             /*
-             * ----------------------------------------------------
+             * --------------------------------------------------
              * Horizontale Position
-             * ----------------------------------------------------
+             * --------------------------------------------------
              */
 
             const columnWidth =
@@ -577,9 +503,9 @@ export function DailyCalendar() {
 
 
             /*
-             * ----------------------------------------------------
+             * --------------------------------------------------
              * Vertikale Position
-             * ----------------------------------------------------
+             * --------------------------------------------------
              */
 
             const top =
@@ -597,71 +523,24 @@ export function DailyCalendar() {
 
               <div
                 key={`${event.summary}-${index}`}
+                className="calendar-event"
                 style={{
-                  position:
-                    "absolute",
-
-                  top:
-                    `${top}px`,
-
+                  top: `${top}px`,
                   left,
-
                   width,
-
-                  height:
-                    `${height}px`,
-
-                  borderLeft:
-                    "4px solid var(--interactive-accent)",
-
-                  background:
-                    "var(--background-secondary)",
-
-                  borderRadius:
-                    "5px",
-
-                  padding:
-                    "5px 8px",
-
-                  overflow:
-                    "hidden",
-
-                  cursor:
-                    "default",
-
-                  zIndex:
-                    10 + item.column,
-
-                  boxShadow:
-                    "0 1px 2px rgba(0,0,0,0.08)",
-
-                  transition:
-                    "background 0.15s ease, box-shadow 0.15s ease",
+                  height: `${height}px`,
                 }}
               >
 
                 {/* Zeit */}
 
-                <div
-                  style={{
-                    fontSize:
-                      "0.7rem",
+                <div className="calendar-event-time">
 
-                    color:
-                      "var(--text-muted)",
-
-                    marginBottom:
-                      "2px",
-                  }}
-                >
                   {start.toLocaleTimeString(
                     "de-DE",
                     {
-                      hour:
-                        "2-digit",
-
-                      minute:
-                        "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     }
                   )}
 
@@ -673,30 +552,17 @@ export function DailyCalendar() {
                     ).toLocaleTimeString(
                       "de-DE",
                       {
-                        hour:
-                          "2-digit",
-
-                        minute:
-                          "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
                       }
                     )}
+
                 </div>
 
 
                 {/* Titel */}
 
-                <div
-                  style={{
-                    fontSize:
-                      "0.85rem",
-
-                    fontWeight:
-                      600,
-
-                    lineHeight:
-                      1.2,
-                  }}
-                >
+                <div className="calendar-event-title">
                   {event.summary}
                 </div>
 
@@ -705,34 +571,16 @@ export function DailyCalendar() {
 
                 {event.location && (
 
-                  <div
-                    style={{
-                      fontSize:
-                        "0.7rem",
-
-                      color:
-                        "var(--text-muted)",
-
-                      marginTop:
-                        "3px",
-
-                      whiteSpace:
-                        "nowrap",
-
-                      overflow:
-                        "hidden",
-
-                      textOverflow:
-                        "ellipsis",
-                    }}
-                  >
+                  <div className="calendar-event-location">
                     📍 {event.location}
                   </div>
 
                 )}
 
               </div>
+
             );
+
           }
         )}
 

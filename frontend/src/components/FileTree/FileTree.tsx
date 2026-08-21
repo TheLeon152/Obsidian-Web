@@ -1,6 +1,8 @@
 import type { VaultNode } from "../../types/vault";
 import { FileTreeNode } from "./FileTreeNode";
 
+import "./FileTree.css";
+
 
 interface FileTreeProps {
   tree: VaultNode;
@@ -25,7 +27,7 @@ export function FileTree({
 }: FileTreeProps) {
 
   return (
-    <div>
+    <div className="file-tree">
 
       {tree.children?.map(
         (node) => (

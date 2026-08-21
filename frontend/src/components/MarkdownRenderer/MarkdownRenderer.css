@@ -1,0 +1,109 @@
+.markdown-renderer {
+  width: 100%;
+  max-width: none;
+
+  margin: 0;
+  padding: 0;
+
+  text-align: left;
+  color: #e5e5e5;
+}
+
+
+/* =========================
+   Headings
+   ========================= */
+
+.markdown-renderer h1,
+.markdown-renderer h2,
+.markdown-renderer h3,
+.markdown-renderer h4,
+.markdown-renderer h5,
+.markdown-renderer h6 {
+  text-align: left;
+  color: #ffffff;
+}
+
+
+.markdown-renderer h1 {
+  margin-top: 0;
+
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+
+.markdown-renderer h2 {
+  font-size: 1.6rem;
+  font-weight: 650;
+}
+
+
+.markdown-renderer h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+
+/* =========================
+   Paragraphs
+   ========================= */
+
+.markdown-renderer p {
+  margin-left: 0;
+  margin-right: 0;
+
+  text-align: left;
+}
+
+
+/* =========================
+   Lists
+   ========================= */
+
+.markdown-renderer ul,
+.markdown-renderer ol {
+  text-align: left;
+}
+
+
+/* =========================
+   Links
+   ========================= */
+
+.markdown-renderer a {
+  text-align: left;
+}
+
+
+/* =========================
+   Sections
+   ========================= */
+
+.markdown-section {
+  width: 100%;
+
+  margin-left: 0;
+  margin-right: 0;
+
+  text-align: left;
+}
+
+
+.markdown-section-heading {
+  width: 100%;
+
+  margin-left: 0;
+  margin-right: 0;
+
+  text-align: left;
+}
+
+
+.markdown-section-children {
+  width: 100%;
+
+  margin-left: 0;
+
+  text-align: left;
+}

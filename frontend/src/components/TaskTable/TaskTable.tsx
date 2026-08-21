@@ -1,10 +1,16 @@
+import { useState } from "react";
+
 import type { Task } from "../../types/task";
+import { updateTask } from "../../api/tasks";
+
+import "./TaskTable.css";
 
 
 interface TaskTableProps {
   tasks: Task[];
   showWaiting?: boolean;
   showBlocked?: boolean;
+  onTaskUpdated?: () => void;
 }
 
 
@@ -12,7 +18,12 @@ export function TaskTable({
   tasks,
   showWaiting = false,
   showBlocked = false,
+  onTaskUpdated,
 }: TaskTableProps) {
+
+  const [updatingTask, setUpdatingTask] =
+    useState<string | null>(null);
+
 
   function formatDate(
     value: string | null
@@ -53,48 +64,100 @@ export function TaskTable({
   }
 
 
-  if (tasks.length === 0) {
-    return (
-      <p>
-        Keine Tasks vorhanden.
-      </p>
-    );
+  async function handleToggle(
+    task: Task
+  ) {
+
+    const taskId =
+      `${task.path}:${task.line}`;
+
+
+    if (updatingTask) {
+      return;
+    }
+
+
+    try {
+
+      setUpdatingTask(taskId);
+
+
+      await updateTask(
+        task.path,
+        task.line,
+        !task.completed,
+      );
+
+
+      await onTaskUpdated?.();
+
+    } catch (error) {
+
+      console.error(
+        "Could not update task:",
+        error
+      );
+
+    } finally {
+
+      setUpdatingTask(null);
+
+    }
   }
 
 
+  if (tasks.length === 0) {
+
+    return (
+      <p className="task-table-empty">
+        Keine Tasks vorhanden.
+      </p>
+    );
+
+  }
+
+
+  const sortedTasks = [
+    ...tasks,
+  ].sort(
+    (a, b) =>
+      Number(a.completed)
+      - Number(b.completed)
+  );
+
+
   return (
-    <div
-      style={{
-        overflowX: "auto",
-      }}
-    >
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-        }}
-      >
+    <div className="task-table-container">
+
+      <table className="task-table">
+
         <thead>
+
           <tr>
+
+            <th className="task-table-status">
+              Status
+            </th>
 
             <th>
               Task
             </th>
 
-            {!showWaiting && !showBlocked && (
-              <>
-                <th>
-                  Bereich
-                </th>
+            {!showWaiting &&
+              !showBlocked && (
+                <>
+                  <th>
+                    Bereich
+                  </th>
 
-                <th>
-                  Deadline
-                </th>
+                  <th>
+                    Deadline
+                  </th>
 
-                <th>
-                  Priorität
-                </th>
-              </>
+                  <th>
+                    Priorität
+                  </th>
+                </>
             )}
 
             {showWaiting && (
@@ -120,82 +183,131 @@ export function TaskTable({
             )}
 
           </tr>
+
         </thead>
+
 
         <tbody>
 
-          {tasks.map((task) => (
+          {sortedTasks.map(
+            (task) => {
 
-            <tr
-              key={`${task.path}:${task.line}`}
-            >
+              const taskId =
+                `${task.path}:${task.line}`;
 
-              <td>
-                {task.text}
-              </td>
+              const isUpdating =
+                updatingTask === taskId;
 
 
-              {!showWaiting &&
-                !showBlocked && (
-                  <>
-                    <td>
-                      {task.path}
-                    </td>
+              return (
+                <tr
+                  key={taskId}
+                  className={
+                    task.completed
+                      ? "task-table-row-completed"
+                      : ""
+                  }
+                >
 
-                    <td>
-                      {formatDate(
-                        task.deadline
-                      )}
-                    </td>
+                  <td
+                    className="task-table-status"
+                  >
 
-                    <td>
-                      <span
-                        className={getPriorityClass(
-                          task.priority
+                    <input
+                      type="checkbox"
+                      checked={task.completed}
+                      disabled={isUpdating}
+                      onChange={() =>
+                        handleToggle(task)
+                      }
+                      aria-label={
+                        task.completed
+                          ? "Task als offen markieren"
+                          : "Task als erledigt markieren"
+                      }
+                    />
+
+                  </td>
+
+
+                  <td className="task-table-text">
+
+                    {task.text}
+
+                  </td>
+
+
+                  {!showWaiting &&
+                    !showBlocked && (
+                      <>
+
+                        <td>
+                          {task.path}
+                        </td>
+
+                        <td>
+                          {formatDate(
+                            task.deadline
+                          )}
+                        </td>
+
+                        <td>
+
+                          <span
+                            className={getPriorityClass(
+                              task.priority
+                            )}
+                          >
+                            {getPriorityLabel(
+                              task.priority
+                            )}
+                          </span>
+
+                        </td>
+
+                      </>
+                  )}
+
+
+                  {showWaiting && (
+                    <>
+
+                      <td>
+                        {task.waiting_for ?? "—"}
+                      </td>
+
+                      <td>
+                        {formatDate(
+                          task.waiting_since
                         )}
-                      >
-                        {getPriorityLabel(
-                          task.priority
+                      </td>
+
+                      <td>
+                        {formatDate(
+                          task.follow_up
                         )}
-                      </span>
+                      </td>
+
+                    </>
+                  )}
+
+
+                  {showBlocked && (
+                    <td>
+                      {task.blocked_by ?? "—"}
                     </td>
-                  </>
-                )}
+                  )}
 
+                </tr>
+              );
 
-              {showWaiting && (
-                <>
-                  <td>
-                    {task.waiting_for ?? "—"}
-                  </td>
-
-                  <td>
-                    {formatDate(
-                      task.waiting_since
-                    )}
-                  </td>
-
-                  <td>
-                    {formatDate(
-                      task.follow_up
-                    )}
-                  </td>
-                </>
-              )}
-
-
-              {showBlocked && (
-                <td>
-                  {task.blocked_by ?? "—"}
-                </td>
-              )}
-
-            </tr>
-
-          ))}
+            }
+          )}
 
         </tbody>
+
       </table>
+
     </div>
   );
 }

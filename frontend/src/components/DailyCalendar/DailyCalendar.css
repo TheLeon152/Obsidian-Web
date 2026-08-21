@@ -1,0 +1,338 @@
+/* ============================================================
+   Calendar Container
+   ============================================================ */
+
+.daily-calendar-container {
+  width: 100%;
+}
+
+
+/* ============================================================
+   Loading / Error
+   ============================================================ */
+
+.daily-calendar-state {
+  width: 100%;
+  padding: 24px;
+
+  box-sizing: border-box;
+
+  color: var(--text-normal);
+
+  background: var(--background-secondary);
+
+  border:
+    1px solid
+    var(--background-modifier-border);
+
+  border-radius: 8px;
+
+  font-size: 0.9rem;
+}
+
+
+.daily-calendar-error {
+  color: var(--text-error);
+}
+
+
+/* ============================================================
+   Datum
+   ============================================================ */
+
+.calendar-date {
+  margin-bottom: 16px;
+
+  color: var(--text-muted);
+
+  font-size: 0.9rem;
+}
+
+
+/* ============================================================
+   Ganztägige Termine
+   ============================================================ */
+
+.calendar-all-day {
+  margin-bottom: 16px;
+
+  margin-left: 65px;
+}
+
+
+.calendar-all-day-event {
+  padding: 6px 10px;
+
+  margin-bottom: 4px;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--interactive-accent) 18%,
+      var(--background-secondary)
+    );
+
+  color: var(--text-normal);
+
+  border-left:
+    3px solid
+    var(--interactive-accent);
+
+  border-radius: 5px;
+
+  font-size: 0.85rem;
+}
+
+
+/* ============================================================
+   Kalenderfläche
+   ============================================================ */
+
+.daily-calendar {
+  position: relative;
+
+  width: 100%;
+
+  height: 1440px;
+
+  background:
+    var(--background-primary);
+
+  border:
+    1px solid
+    var(--background-modifier-border);
+
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+
+/* ============================================================
+   Stunden
+   ============================================================ */
+
+.calendar-hour {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  height: 60px;
+
+  border-top:
+    1px solid
+    var(--background-modifier-border);
+
+  pointer-events: none;
+}
+
+
+.calendar-hour-label {
+  position: absolute;
+
+  left: 0;
+
+  top: -9px;
+
+  width: 55px;
+
+  padding-right: 10px;
+
+  box-sizing: border-box;
+
+  text-align: right;
+
+  color: var(--text-muted);
+
+  font-size: 0.75rem;
+
+  line-height: 1;
+}
+
+
+/* ============================================================
+   Halb-Stunden
+   ============================================================ */
+
+.calendar-half-hour {
+  position: absolute;
+
+  left: 65px;
+  right: 0;
+
+  border-top:
+    1px dashed
+    var(--background-modifier-border-hover);
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   Kalenderfläche innerhalb der Zeitleiste
+   ============================================================ */
+
+.calendar-surface {
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+
+  left: 65px;
+  right: 0;
+
+  border-left:
+    1px solid
+    var(--background-modifier-border);
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   Aktuelle Uhrzeit
+   ============================================================ */
+
+.calendar-current-time {
+  position: absolute;
+
+  left: 65px;
+  right: 0;
+
+  height: 2px;
+
+  background:
+    #e06c75;
+
+  z-index: 100;
+
+  pointer-events: none;
+}
+
+
+.calendar-current-time-dot {
+  position: absolute;
+
+  left: -5px;
+
+  top: -4px;
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50%;
+
+  background:
+    #e06c75;
+}
+
+
+/* ============================================================
+   Termine
+   ============================================================ */
+
+.calendar-event {
+  position: absolute;
+
+  box-sizing: border-box;
+
+  padding: 6px 9px;
+
+  background:
+    var(--background-secondary);
+
+  border:
+    1px solid
+    var(--background-modifier-border);
+
+  border-left:
+    4px solid
+    var(--interactive-accent);
+
+  border-radius: 6px;
+
+  color: var(--text-normal);
+
+  overflow: hidden;
+
+  cursor: default;
+
+  z-index: 10;
+
+  box-shadow:
+    0 2px 4px
+    rgba(0, 0, 0, 0.15);
+
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    border-color 0.15s ease;
+}
+
+
+.calendar-event:hover {
+  background:
+    var(--background-secondary-alt);
+
+  border-color:
+    var(--background-modifier-border-hover);
+
+  border-left-color:
+    var(--interactive-accent);
+
+  box-shadow:
+    0 3px 8px
+    rgba(0, 0, 0, 0.25);
+}
+
+
+/* ============================================================
+   Terminzeit
+   ============================================================ */
+
+.calendar-event-time {
+  margin-bottom: 3px;
+
+  color: var(--text-muted);
+
+  font-size: 0.7rem;
+
+  line-height: 1.2;
+}
+
+
+/* ============================================================
+   Termintitel
+   ============================================================ */
+
+.calendar-event-title {
+  color: var(--text-normal);
+
+  font-size: 0.85rem;
+
+  font-weight: 600;
+
+  line-height: 1.2;
+}
+
+
+/* ============================================================
+   Terminort
+   ============================================================ */
+
+.calendar-event-location {
+  margin-top: 4px;
+
+  color: var(--text-muted);
+
+  font-size: 0.7rem;
+
+  line-height: 1.2;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
