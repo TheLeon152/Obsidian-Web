@@ -1,5 +1,5 @@
 import type { Note } from "../../types/note";
-import type { Task } from "../../types/task";
+import { Breadcrumbs } from "../Breadcrumbs/Breadcrumbs";
 
 import { MarkdownRenderer } from "../MarkdownRenderer/MarkdownRenderer";
 import { NoteLink } from "../NoteLink/NoteLink";
@@ -63,6 +63,11 @@ export function NoteViewer({
   return (
     <article className="note-viewer">
 
+      <Breadcrumbs
+        path={note.path}
+        onNavigate={onNoteClick}
+      />
+
       <header className="note-header">
 
         <h1 className="note-title">
@@ -101,7 +106,6 @@ export function NoteViewer({
 
         <MarkdownRenderer
           content={note.content}
-          notePath={note.path}
           tasks={note.tasks}
           onWikiLinkClick={onWikiLinkClick}
           onTagClick={onTagClick}

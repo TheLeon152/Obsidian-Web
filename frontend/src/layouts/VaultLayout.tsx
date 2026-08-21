@@ -13,6 +13,7 @@ interface VaultLayoutProps {
   refreshing: boolean;
   children: ReactNode;
   onSearchNoteClick: (path: string) => void;
+  onFolderClick: (path: string) => void;
 }
 
 
@@ -23,6 +24,7 @@ export function VaultLayout({
   refreshing,
   children,
   onSearchNoteClick,
+  onFolderClick,
 }: VaultLayoutProps) {
   return (
     <div
@@ -58,6 +60,7 @@ export function VaultLayout({
         <FileTree
           tree={tree}
           onFileClick={onFileClick}
+          onFolderClick={onFolderClick}
         />
       </aside>
 

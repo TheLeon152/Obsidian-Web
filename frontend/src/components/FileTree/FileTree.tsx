@@ -4,11 +4,13 @@ import { FileTreeNode } from "./FileTreeNode";
 interface FileTreeProps {
   tree: VaultNode;
   onFileClick: (path: string) => void;
+  onFolderClick: (path: string) => void;
 }
 
 export function FileTree({
   tree,
   onFileClick,
+  onFolderClick,
 }: FileTreeProps) {
   return (
     <div>
@@ -17,6 +19,7 @@ export function FileTree({
           key={node.path}
           node={node}
           onFileClick={onFileClick}
+          onFolderClick={onFolderClick}
         />
       ))}
     </div>

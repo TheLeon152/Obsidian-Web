@@ -1,6 +1,11 @@
 from pathlib import Path
 
-from app.models.vault import VaultNode
+from app.models.vault import (
+    FolderContent,
+    FolderEntry,
+    VaultNode,
+)
+
 from app.services.vault_indexer import VaultIndexer
 
 
@@ -23,6 +28,85 @@ class VaultService:
 
     def refresh(self) -> None:
         self.vault_indexer.build()
+
+
+    def get_folder_content(
+        self,
+        relative_path: str,
+    ) -> FolderContent:
+
+        relative_path = relative_path.replace(
+            "\\",
+            "/",
+        )
+
+        folder_path = (
+            self.vault_path / relative_path
+        ).resolve()
+
+        vault_path = (
+            self.vault_path.resolve()
+        )
+
+        if not folder_path.is_relative_to(
+            vault_path
+        ):
+            raise ValueError(
+                "Path is outside of the vault."
+            )
+
+        if not folder_path.exists():
+            raise FileNotFoundError(
+                relative_path
+            )
+
+        if not folder_path.is_dir():
+            raise ValueError(
+                f"Path is not a folder: {relative_path}"
+            )
+
+        folders: list[FolderEntry] = []
+        notes: list[FolderEntry] = []
+
+        for child in sorted(
+            folder_path.iterdir(),
+            key=lambda p: (
+                not p.is_dir(),
+                p.name.lower(),
+            ),
+        ):
+
+            if not self._should_include(child):
+                continue
+
+            child_relative_path = (
+                child.relative_to(
+                    self.vault_path
+                ).as_posix()
+            )
+
+            entry = FolderEntry(
+                name=child.name,
+                path=child_relative_path,
+            )
+
+            if child.is_dir():
+                folders.append(entry)
+
+            elif (
+                child.is_file()
+                and child.suffix.lower() == ".md"
+            ):
+                notes.append(entry)
+
+        return FolderContent(
+            name=folder_path.name,
+            path=folder_path.relative_to(
+                self.vault_path
+            ).as_posix(),
+            folders=folders,
+            notes=notes,
+        )
 
 
     def _build_node(

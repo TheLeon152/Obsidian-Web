@@ -82,3 +82,20 @@ class IndexedNote(BaseModel):
     tasks: list[Task] = Field(
         default_factory=list
     )
+
+class FolderEntry(BaseModel):
+    name: str
+    path: str
+
+
+class FolderContent(BaseModel):
+    name: str
+    path: str
+
+    folders: list[FolderEntry] = Field(
+        default_factory=list
+    )
+
+    notes: list[FolderEntry] = Field(
+        default_factory=list
+    )

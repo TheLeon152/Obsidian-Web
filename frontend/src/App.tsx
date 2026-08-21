@@ -27,6 +27,7 @@ import { BlockedTasksPage } from "./pages/TaskPage/BlockedTasksPage";
 import { TaskDashboardPage } from "./pages/TaskPage/TaskDashboardPage";
 import { DailyPage } from "./pages/DailyPage/DailyPage";
 import { InboxPage } from "./pages/InboxPage/InboxPage";
+import { FolderPage } from "./pages/FolderPage/FolderPage";
 
 
 function App() {
@@ -165,6 +166,15 @@ function AppRoutes({
   }
 
 
+  function handleFolderClick(
+    path: string
+  ) {
+    navigate(
+      `/folder/${encodeURI(path)}`
+    );
+  }
+
+
   async function handleNoteClick(
     path: string
   ) {
@@ -251,6 +261,7 @@ function AppRoutes({
       onRefresh={onRefresh}
       refreshing={refreshing}
       onSearchNoteClick={handleFileClick}
+      onFolderClick={handleFolderClick}
     >
       <Routes>
 
@@ -359,6 +370,16 @@ function AppRoutes({
           path="/inbox"
           element={
             <InboxPage />
+          }
+        />
+
+
+        <Route
+          path="/folder/*"
+          element={
+            <FolderPage
+              onNoteClick={handleNoteClick}
+            />
           }
         />
 
