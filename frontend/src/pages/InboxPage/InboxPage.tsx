@@ -3,6 +3,10 @@ import {
   useState,
 } from "react";
 
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+
 import {
   createInboxNote,
   deleteInboxNote,
@@ -16,6 +20,8 @@ import type {
 } from "../../types/inbox";
 
 import "./InboxPage.css";
+
+import "highlight.js/styles/github-dark.css";
 
 
 export function InboxPage() {
@@ -276,6 +282,7 @@ export function InboxPage() {
       <header className="inbox-header">
 
         <div>
+
           <h1>
             📥 Inbox
           </h1>
@@ -283,6 +290,7 @@ export function InboxPage() {
           <p>
             Temporäre Notizen erstellen und bearbeiten.
           </p>
+
         </div>
 
       </header>
@@ -301,7 +309,7 @@ export function InboxPage() {
 
         {/* ====================================================
             Linke Seite: Notizen
-            ==================================================== */}
+        ==================================================== */}
 
         <aside className="inbox-sidebar">
 
@@ -416,7 +424,7 @@ export function InboxPage() {
 
         {/* ====================================================
             Rechte Seite: Editor
-            ==================================================== */}
+        ==================================================== */}
 
         <main className="inbox-editor">
 
@@ -453,6 +461,7 @@ export function InboxPage() {
 
                 </div>
 
+
                 <div className="inbox-editor-actions">
 
                   <button
@@ -468,6 +477,7 @@ export function InboxPage() {
                       ? "Speichern..."
                       : "Speichern"}
                   </button>
+
 
                   <button
                     type="button"
@@ -496,16 +506,60 @@ export function InboxPage() {
 
               ) : (
 
-                <textarea
-                  className="inbox-textarea"
-                  value={content}
-                  onChange={event =>
-                    setContent(
-                      event.target.value
-                    )
-                  }
-                  spellCheck={false}
-                />
+                <div className="inbox-editor-workspace">
+
+                  {/* ==================================================
+                      Markdown Editor
+                  ================================================== */}
+
+                  <div className="inbox-editor-pane">
+
+                    <div className="inbox-pane-header">
+                      Markdown
+                    </div>
+
+                    <textarea
+                      className="inbox-textarea"
+                      value={content}
+                      onChange={event =>
+                        setContent(
+                          event.target.value
+                        )
+                      }
+                      spellCheck={false}
+                    />
+
+                  </div>
+
+
+                  {/* ==================================================
+                      Live Preview
+                  ================================================== */}
+
+                  <div className="inbox-preview-pane">
+
+                    <div className="inbox-pane-header">
+                      Vorschau
+                    </div>
+
+                    <article className="markdown-preview">
+
+                      <ReactMarkdown
+                        remarkPlugins={[
+                          remarkGfm,
+                        ]}
+                        rehypePlugins={[
+                          rehypeHighlight,
+                        ]}
+                      >
+                        {content}
+                      </ReactMarkdown>
+
+                    </article>
+
+                  </div>
+
+                </div>
 
               )}
 

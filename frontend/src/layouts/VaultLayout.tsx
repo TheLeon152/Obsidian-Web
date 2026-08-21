@@ -1,3 +1,5 @@
+import logo from "../assets/branding/obsidian-web-logo.png";
+
 import type {
   ReactNode,
 } from "react";
@@ -17,6 +19,8 @@ import {
 import {
   Navigation,
 } from "../components/Navigation/Navigation";
+
+import "./VaultLayout.css";
 
 
 interface VaultLayoutProps {
@@ -53,61 +57,40 @@ export function VaultLayout({
 }: VaultLayoutProps) {
 
   return (
-    <div
-      style={{
-        display: "grid",
+    <div className="vault-layout">
 
-        gridTemplateColumns:
-          "300px 1fr",
+      {/* =====================================================
+          Sidebar
+          ===================================================== */}
 
-        height: "100vh",
-      }}
-    >
+      <aside className="vault-sidebar">
 
-      <aside
-        style={{
-          borderRight:
-            "1px solid var(--background-modifier-border)",
+        {/* ===================================================
+            Logo / Header
+            =================================================== */}
 
-          padding: "16px",
+        <div className="vault-sidebar-header">
 
-          overflowY: "auto",
+          <div className="vault-brand">
 
-          background:
-            "var(--background-secondary)",
-        }}
-      >
+            <img
+              src={logo}
+              alt="Obsidian Web"
+              className="vault-brand-logo"
+            />
 
-        <h2>
-          Obsidian Web
-        </h2>
+            <span className="vault-brand-title">
+              Obsidian Web
+            </span>
 
+          </div>
 
-        {/* =====================================================
-            Hauptnavigation
-        ===================================================== */}
-
-        <Navigation />
+        </div>
 
 
-        {/* =====================================================
-            Refresh
-        ===================================================== */}
-
-        <button
-          type="button"
-          onClick={onRefresh}
-          disabled={refreshing}
-        >
-          {refreshing
-            ? "↻ Refreshing..."
-            : "↻ Refresh"}
-        </button>
-
-
-        {/* =====================================================
+        {/* ===================================================
             Suche
-        ===================================================== */}
+            =================================================== */}
 
         <SearchBar
           onNoteClick={
@@ -116,35 +99,82 @@ export function VaultLayout({
         />
 
 
-        {/* =====================================================
+        {/* ===================================================
+            Hauptnavigation
+            =================================================== */}
+
+        <Navigation />
+
+
+        {/* ===================================================
             Vault
-        ===================================================== */}
+            =================================================== */}
 
-        <h3>
-          Vault
-        </h3>
+        <div className="vault-section">
+
+          <div className="vault-section-header">
+
+            <span>
+              Vault
+            </span>
+
+          </div>
 
 
-        <FileTree
-          tree={tree}
-          onFileClick={
-            onFileClick
-          }
-          onFolderClick={
-            onFolderClick
-          }
-        />
+          <div className="vault-tree">
+
+            <FileTree
+              tree={tree}
+              onFileClick={
+                onFileClick
+              }
+              onFolderClick={
+                onFolderClick
+              }
+            />
+
+          </div>
+
+        </div>
+
+
+        {/* ===================================================
+            Sidebar Footer
+            =================================================== */}
+
+        <div className="vault-sidebar-footer">
+
+          <button
+            type="button"
+            className="vault-refresh-button"
+            onClick={onRefresh}
+            disabled={refreshing}
+          >
+
+            <span className="vault-refresh-icon">
+              {refreshing
+                ? "⟳"
+                : "↻"}
+            </span>
+
+            <span>
+              {refreshing
+                ? "Vault wird aktualisiert..."
+                : "Vault aktualisieren"}
+            </span>
+
+          </button>
+
+        </div>
 
       </aside>
 
 
-      <main
-        style={{
-          padding: "32px",
+      {/* =====================================================
+          Main
+          ===================================================== */}
 
-          overflowY: "auto",
-        }}
-      >
+      <main className="vault-main">
 
         {children}
 

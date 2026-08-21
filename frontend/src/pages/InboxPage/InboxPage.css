@@ -328,41 +328,6 @@
 }
 
 
-.inbox-textarea {
-  flex: 1;
-
-  width: 100%;
-
-  min-height: 0;
-
-  box-sizing: border-box;
-
-  resize: none;
-
-  border: none;
-
-  outline: none;
-
-  padding:
-    20px;
-
-  background:
-    var(--background-primary);
-
-  color:
-    var(--text-normal);
-
-  font-family:
-    var(--font-monospace);
-
-  font-size:
-    0.9rem;
-
-  line-height:
-    1.6;
-}
-
-
 .inbox-editor-empty {
   display: flex;
 
@@ -439,4 +404,423 @@
 
   color:
     var(--color-red);
+}
+
+
+
+
+
+/* ============================================================
+   Markdown Editor Workspace
+   ============================================================ */
+
+.inbox-editor-workspace {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  flex: 1;
+
+  min-height: 0;
+
+  border-top:
+    1px solid var(--background-modifier-border);
+}
+
+
+/* ============================================================
+   Editor / Preview Pane
+   ============================================================ */
+
+.inbox-editor-pane,
+.inbox-preview-pane {
+  min-width: 0;
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+
+.inbox-editor-pane {
+  border-right:
+    1px solid var(--background-modifier-border);
+}
+
+
+.inbox-pane-header {
+  flex-shrink: 0;
+
+  padding:
+    8px 14px;
+
+  font-size:
+    0.75rem;
+
+  font-weight:
+    600;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.05em;
+
+  color:
+    var(--text-muted);
+
+  background:
+    var(--background-secondary);
+
+  border-bottom:
+    1px solid var(--background-modifier-border);
+}
+
+
+/* ============================================================
+   Textarea
+   ============================================================ */
+
+.inbox-textarea {
+  flex: 1;
+
+  width: 100%;
+
+  min-height: 500px;
+
+  resize: none;
+
+  box-sizing: border-box;
+
+  padding: 20px;
+
+  border: none;
+
+  outline: none;
+
+  background:
+    var(--background-primary);
+
+  color:
+    var(--text-normal);
+
+  font-family:
+    "JetBrains Mono",
+    "Fira Code",
+    Consolas,
+    monospace;
+
+  font-size:
+    0.9rem;
+
+  line-height:
+    1.6;
+}
+
+
+.inbox-textarea:focus {
+  outline: none;
+}
+
+
+/* ============================================================
+   Markdown Preview
+   ============================================================ */
+
+.inbox-preview-pane {
+  overflow: hidden;
+
+  background:
+    var(--background-primary);
+}
+
+
+.markdown-preview {
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding:
+    20px 28px;
+
+  color:
+    var(--text-normal);
+
+  font-size:
+    0.95rem;
+
+  line-height:
+    1.7;
+
+  text-align: left;
+}
+
+
+/* ============================================================
+   Headings
+   ============================================================ */
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+  color:
+    var(--text-normal);
+
+  text-align: left;
+
+  margin-top:
+    1.4em;
+
+  margin-bottom:
+    0.6em;
+
+  line-height:
+    1.3;
+}
+
+
+.markdown-preview h1 {
+  font-size:
+    1.8rem;
+}
+
+
+.markdown-preview h2 {
+  font-size:
+    1.5rem;
+}
+
+
+.markdown-preview h3 {
+  font-size:
+    1.25rem;
+}
+
+
+/* ============================================================
+   Paragraphs
+   ============================================================ */
+
+.markdown-preview p {
+  margin:
+    0 0 1em;
+
+  text-align: left;
+}
+
+
+/* ============================================================
+   Strong / Emphasis
+   ============================================================ */
+
+.markdown-preview strong {
+  color:
+    var(--text-normal);
+
+  font-weight:
+    700;
+}
+
+
+.markdown-preview em {
+  color:
+    var(--text-normal);
+}
+
+
+/* ============================================================
+   Links
+   ============================================================ */
+
+.markdown-preview a {
+  color:
+    var(--text-accent);
+
+  text-decoration:
+    none;
+}
+
+
+.markdown-preview a:hover {
+  text-decoration:
+    underline;
+}
+
+
+/* ============================================================
+   Lists
+   ============================================================ */
+
+.markdown-preview ul,
+.markdown-preview ol {
+  padding-left:
+    1.8rem;
+
+  margin-top:
+    0.5em;
+
+  margin-bottom:
+    1em;
+
+  text-align: left;
+}
+
+
+.markdown-preview li {
+  margin-bottom:
+    0.25em;
+}
+
+
+/* ============================================================
+   Blockquotes
+   ============================================================ */
+
+.markdown-preview blockquote {
+  margin:
+    1em 0;
+
+  padding:
+    8px 16px;
+
+  border-left:
+    4px solid var(--interactive-accent);
+
+  background:
+    var(--background-secondary);
+
+  color:
+    var(--text-muted);
+}
+
+
+/* ============================================================
+   Inline Code
+   ============================================================ */
+
+.markdown-preview code {
+  padding:
+    2px 5px;
+
+  border-radius:
+    4px;
+
+  background:
+    var(--background-secondary);
+
+  color:
+    var(--text-normal);
+
+  font-family:
+    "JetBrains Mono",
+    "Fira Code",
+    Consolas,
+    monospace;
+
+  font-size:
+    0.88em;
+}
+
+
+/* ============================================================
+   Code Blocks
+   ============================================================ */
+
+.markdown-preview pre {
+  margin:
+    1em 0;
+
+  padding:
+    14px 16px;
+
+  overflow-x:
+    auto;
+
+  border-radius:
+    6px;
+
+  background:
+    var(--background-secondary);
+}
+
+
+.markdown-preview pre code {
+  padding: 0;
+
+  background:
+    transparent;
+
+  font-size:
+    0.85rem;
+}
+
+
+/* ============================================================
+   Tables
+   ============================================================ */
+
+.markdown-preview table {
+  width: 100%;
+
+  margin:
+    1em 0;
+
+  border-collapse:
+    collapse;
+
+  text-align: left;
+}
+
+
+.markdown-preview th,
+.markdown-preview td {
+  padding:
+    8px 12px;
+
+  border:
+    1px solid var(--background-modifier-border);
+
+  text-align: left;
+}
+
+
+.markdown-preview th {
+  background:
+    var(--background-secondary);
+
+  font-weight:
+    600;
+}
+
+
+/* ============================================================
+   Horizontal Rule
+   ============================================================ */
+
+.markdown-preview hr {
+  border: none;
+
+  border-top:
+    1px solid var(--background-modifier-border);
+
+  margin:
+    1.5em 0;
+}
+
+
+/* ============================================================
+   Images
+   ============================================================ */
+
+.markdown-preview img {
+  max-width: 100%;
+
+  height: auto;
+
+  border-radius: 6px;
 }

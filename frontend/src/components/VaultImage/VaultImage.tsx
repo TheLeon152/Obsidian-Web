@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../../config";
 
 
 interface VaultImageProps {
   path: string;
   alt?: string;
 }
-
-
-const API_BASE_URL =
-  "http://localhost:8000";
-
 
 export function VaultImage({
   path,
