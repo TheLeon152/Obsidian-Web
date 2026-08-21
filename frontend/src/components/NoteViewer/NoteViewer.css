@@ -516,3 +516,91 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* =========================
+   Collapsible Markdown Sections
+========================= */
+
+.markdown-section {
+  position: relative;
+}
+
+.markdown-section-heading {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+
+  margin: 2rem 0 0.75rem;
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: inherit;
+
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+}
+
+.markdown-section-heading:hover {
+  color: var(--text-accent, #7aa2f7);
+}
+
+.markdown-section-toggle {
+  flex: 0 0 auto;
+
+  width: 1.5rem;
+
+  margin-right: 0.25rem;
+
+  opacity: 0.55;
+
+  font-size: 0.9em;
+
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.markdown-section-heading:hover
+.markdown-section-toggle {
+  opacity: 1;
+}
+
+.markdown-section-heading-content {
+  min-width: 0;
+}
+
+.markdown-section-heading-content
+h1,
+.markdown-section-heading-content
+h2,
+.markdown-section-heading-content
+h3,
+.markdown-section-heading-content
+h4,
+.markdown-section-heading-content
+h5,
+.markdown-section-heading-content
+h6 {
+  margin: 0;
+}
+
+
+/* =========================
+   Collapsed State
+========================= */
+
+.markdown-section-collapsed
+.markdown-section-heading {
+  margin-bottom: 0;
+}
+
+.markdown-section-children {
+  margin-left: 0;
+}

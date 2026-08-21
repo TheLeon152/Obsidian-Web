@@ -1,0 +1,46 @@
+.markdown-section {
+  margin: 1.5rem 0;
+}
+
+
+.markdown-section-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 0.5rem;
+
+  cursor: pointer;
+
+  user-select: none;
+}
+
+
+.markdown-section-heading:hover {
+  opacity: 0.8;
+}
+
+
+.markdown-section-toggle {
+  width: 1rem;
+
+  font-size: 0.75rem;
+
+  opacity: 0.6;
+}
+
+
+.markdown-section-content {
+  margin-left: 1.5rem;
+}
+
+
+.markdown-section-collapsed
+.markdown-section-content {
+  display: none;
+}
+
+
+.markdown-section-collapsed
+.markdown-section-heading {
+  margin-bottom: 0;
+}
