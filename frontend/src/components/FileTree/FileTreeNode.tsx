@@ -1,30 +1,76 @@
 import {
+  useEffect,
   useState,
-  type MouseEvent,
 } from "react";
 
 import type { VaultNode } from "../../types/vault";
 
+
 interface FileTreeNodeProps {
   node: VaultNode;
+
   level?: number;
-  onFileClick?: (path: string) => void;
-  onFolderClick?: (path: string) => void;
+
+  onFileClick?: (
+    path: string
+  ) => void;
+
+  onFolderClick?: (
+    path: string
+  ) => void;
+
+  activePath?: string;
 }
+
 
 export function FileTreeNode({
   node,
   level = 0,
   onFileClick,
   onFolderClick,
+  activePath,
 }: FileTreeNodeProps) {
-  const isFolder = node.type === "folder";
 
-  const [isExpanded, setIsExpanded] =
-    useState(false);
+  const isFolder =
+    node.type === "folder";
+
+
+  const isActive =
+    isFolder &&
+    activePath === node.path;
+
+
+  const isParentOfActive =
+    isFolder &&
+    activePath !== undefined &&
+    activePath.startsWith(
+      `${node.path}/`
+    );
+
+
+  const [
+    isExpanded,
+    setIsExpanded,
+  ] = useState(
+    isParentOfActive
+  );
+
+
+  useEffect(() => {
+
+    if (isParentOfActive) {
+
+      setIsExpanded(true);
+
+    }
+
+  }, [isParentOfActive]);
+
 
   function handleClick() {
+
     if (isFolder) {
+
       setIsExpanded(
         (current) => !current
       );
@@ -32,91 +78,200 @@ export function FileTreeNode({
       return;
     }
 
-    onFileClick?.(node.path);
+
+    onFileClick?.(
+      node.path
+    );
   }
+
 
   function handleFolderOpen(
-    event: MouseEvent
+    event: React.MouseEvent
   ) {
+
     event.stopPropagation();
 
+
     if (isFolder) {
-      onFolderClick?.(node.path);
+
+      onFolderClick?.(
+        node.path
+      );
+
     }
+
   }
+
 
   return (
     <div>
+
       <div
-        onClick={handleClick}
+        onClick={
+          handleClick
+        }
         style={{
-          paddingLeft: `${level * 16}px`,
-          paddingTop: "4px",
-          paddingBottom: "4px",
-          cursor: isFolder
-            ? "pointer"
-            : "default",
-          userSelect: "none",
+          display: "flex",
+          alignItems: "center",
+
+          paddingLeft:
+            `${level * 16}px`,
+
+          paddingTop:
+            "5px",
+
+          paddingBottom:
+            "5px",
+
+          paddingRight:
+            "4px",
+
+          cursor:
+            isFolder
+              ? "pointer"
+              : "default",
+
+          userSelect:
+            "none",
+
+          borderRadius:
+            "5px",
+
+          background:
+            isActive
+              ? "#e8e8e8"
+              : "transparent",
+
+          fontWeight:
+            isActive
+              ? 600
+              : 400,
         }}
       >
-        {isFolder && (
-          <span>
-            {isExpanded ? "▼" : "▶"}
-          </span>
-        )}
 
-        {!isFolder && (
+        {isFolder && (
+
           <span
             style={{
-              marginLeft: "16px",
+              width: "18px",
+              display: "inline-block",
+            }}
+          >
+            {isExpanded
+              ? "▼"
+              : "▶"}
+          </span>
+
+        )}
+
+
+        {!isFolder && (
+
+          <span
+            style={{
+              width: "18px",
+              marginLeft: "0",
             }}
           >
             📄
           </span>
+
         )}
+
 
         <span
           style={{
             marginLeft: "6px",
+            overflow: "hidden",
+            textOverflow:
+              "ellipsis",
+            whiteSpace:
+              "nowrap",
           }}
         >
           {node.name}
         </span>
 
+
         {isFolder && (
+
           <button
             type="button"
-            onClick={handleFolderOpen}
+            onClick={
+              handleFolderOpen
+            }
             style={{
-              marginLeft: "8px",
+              marginLeft:
+                "auto",
+
+              border:
+                "none",
+
+              background:
+                "transparent",
+
+              cursor:
+                "pointer",
+
+              fontSize:
+                "12px",
+
+              opacity:
+                isActive
+                  ? 1
+                  : 0.6,
             }}
           >
             Öffnen
           </button>
+
         )}
+
       </div>
+
 
       {isFolder &&
         isExpanded &&
         node.children && (
+
           <div>
+
             {node.children.map(
               (child) => (
+
                 <FileTreeNode
-                  key={child.path}
-                  node={child}
-                  level={level + 1}
+                  key={
+                    child.path
+                  }
+
+                  node={
+                    child
+                  }
+
+                  level={
+                    level + 1
+                  }
+
                   onFileClick={
                     onFileClick
                   }
+
                   onFolderClick={
                     onFolderClick
                   }
+
+                  activePath={
+                    activePath
+                  }
                 />
+
               )
             )}
+
           </div>
+
         )}
+
     </div>
   );
 }

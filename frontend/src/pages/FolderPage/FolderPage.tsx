@@ -38,18 +38,47 @@ function FolderBreadcrumbs({
       );
 
 
+  function handleRootClick() {
+    navigate("/folder/");
+  }
+
+
+  function handlePartClick(
+    currentPath: string
+  ) {
+    navigate(
+      `/folder/${encodeURI(
+        currentPath
+      )}`
+    );
+  }
+
+
   return (
     <nav
       aria-label="Breadcrumb"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        flexWrap: "wrap",
+        gap: "4px",
+        marginBottom: "24px",
+        fontSize: "14px",
+      }}
     >
 
       <button
         type="button"
-        onClick={() =>
-          navigate("/folder/")
-        }
+        onClick={handleRootClick}
+        style={{
+          border: "none",
+          background: "none",
+          padding: "4px 6px",
+          cursor: "pointer",
+          fontWeight: 500,
+        }}
       >
-        Vault
+        🏠 Vault
       </button>
 
 
@@ -73,16 +102,30 @@ function FolderBreadcrumbs({
           return (
             <span
               key={currentPath}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "4px",
+              }}
             >
 
-              <span>
-                {" / "}
+              <span
+                style={{
+                  opacity: 0.5,
+                }}
+              >
+                /
               </span>
 
 
               {isLast ? (
 
-                <span>
+                <span
+                  style={{
+                    padding: "4px 6px",
+                    fontWeight: 600,
+                  }}
+                >
                   {part}
                 </span>
 
@@ -91,12 +134,17 @@ function FolderBreadcrumbs({
                 <button
                   type="button"
                   onClick={() =>
-                    navigate(
-                      `/folder/${encodeURI(
-                        currentPath
-                      )}`
+                    handlePartClick(
+                      currentPath
                     )
                   }
+                  style={{
+                    border: "none",
+                    background: "none",
+                    padding: "4px 6px",
+                    cursor: "pointer",
+                    fontWeight: 500,
+                  }}
                 >
                   {part}
                 </button>
@@ -157,6 +205,14 @@ export function FolderPage({
 
   useEffect(() => {
 
+    const decodedPath =
+      folderPath
+        ? decodeURIComponent(
+            folderPath
+          )
+        : "";
+
+
     async function loadFolder() {
 
       setLoading(true);
@@ -164,25 +220,6 @@ export function FolderPage({
 
 
       try {
-
-        /*
-         * Kein folderPath bedeutet:
-         * Wir befinden uns am Root des Vaults.
-         *
-         * Beispiel:
-         * /folder/
-         *
-         * ergibt:
-         * ""
-         */
-
-        const decodedPath =
-          folderPath
-            ? decodeURIComponent(
-                folderPath
-              )
-            : "";
-
 
         const result =
           await getFolderContent(
@@ -234,11 +271,37 @@ export function FolderPage({
   }
 
 
+  function getNoteName(
+    name: string
+  ): string {
+
+    if (
+      name
+        .toLowerCase()
+        .endsWith(".md")
+    ) {
+
+      return name.slice(
+        0,
+        -3
+      );
+
+    }
+
+    return name;
+  }
+
+
   if (loading) {
 
     return (
-      <div>
-        Loading folder...
+      <div
+        style={{
+          padding: "16px",
+          opacity: 0.7,
+        }}
+      >
+        Ordner wird geladen...
       </div>
     );
 
@@ -248,17 +311,24 @@ export function FolderPage({
   if (error) {
 
     return (
-      <div>
+      <div
+        style={{
+          padding: "16px",
+        }}
+      >
 
         <button
           type="button"
           onClick={handleBack}
+          style={{
+            marginBottom: "16px",
+          }}
         >
-          ← Back
+          ← Zurück
         </button>
 
         <p>
-          Error: {error}
+          Fehler: {error}
         </p>
 
       </div>
@@ -270,17 +340,24 @@ export function FolderPage({
   if (!folder) {
 
     return (
-      <div>
+      <div
+        style={{
+          padding: "16px",
+        }}
+      >
 
         <button
           type="button"
           onClick={handleBack}
+          style={{
+            marginBottom: "16px",
+          }}
         >
-          ← Back
+          ← Zurück
         </button>
 
         <p>
-          Folder not found.
+          Ordner wurde nicht gefunden.
         </p>
 
       </div>
@@ -290,13 +367,25 @@ export function FolderPage({
 
 
   return (
-    <div>
+    <div
+      style={{
+        maxWidth: "1000px",
+      }}
+    >
 
       <button
         type="button"
         onClick={handleBack}
+        style={{
+          marginBottom: "16px",
+          border: "none",
+          background: "none",
+          padding: "4px 0",
+          cursor: "pointer",
+          fontSize: "14px",
+        }}
       >
-        ← Back
+        ← Zurück
       </button>
 
 
@@ -305,57 +394,105 @@ export function FolderPage({
       />
 
 
-      <h1>
-        📁 {folder.name}
-      </h1>
+      <header
+        style={{
+          marginBottom: "32px",
+        }}
+      >
+
+        <h1
+          style={{
+            margin: 0,
+            marginBottom: "8px",
+          }}
+        >
+          📁 {folder.name}
+        </h1>
+
+      </header>
 
 
-      <p>
-        {folder.path}
-      </p>
+      <section
+        style={{
+          marginBottom: "32px",
+        }}
+      >
 
-
-      <section>
-
-        <h2>
-          Folders
+        <h2
+          style={{
+            fontSize: "18px",
+            marginBottom: "12px",
+          }}
+        >
+          Ordner
         </h2>
 
 
         {folder.folders.length === 0 ? (
 
-          <p>
-            No subfolders.
+          <p
+            style={{
+              opacity: 0.6,
+              fontSize: "14px",
+            }}
+          >
+            Keine Unterordner.
           </p>
 
         ) : (
 
-          <ul>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+            }}
+          >
 
             {folder.folders.map(
               (entry) => (
 
-                <li
+                <button
                   key={entry.path}
+                  type="button"
+                  onClick={() =>
+                    handleFolderClick(
+                      entry.path
+                    )
+                  }
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    padding: "10px 12px",
+                    border: "1px solid #ddd",
+                    borderRadius: "6px",
+                    background: "transparent",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    fontSize: "15px",
+                  }}
                 >
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      handleFolderClick(
-                        entry.path
-                      )
-                    }
+                  <span
+                    style={{
+                      marginRight: "10px",
+                      fontSize: "18px",
+                    }}
                   >
-                    📁 {entry.name}
-                  </button>
+                    📁
+                  </span>
 
-                </li>
+                  <span>
+                    {entry.name}
+                  </span>
+
+                </button>
 
               )
             )}
 
-          </ul>
+          </div>
 
         )}
 
@@ -364,45 +501,83 @@ export function FolderPage({
 
       <section>
 
-        <h2>
-          Notes
+        <h2
+          style={{
+            fontSize: "18px",
+            marginBottom: "12px",
+          }}
+        >
+          Notizen
         </h2>
 
 
         {folder.notes.length === 0 ? (
 
-          <p>
-            No notes.
+          <p
+            style={{
+              opacity: 0.6,
+              fontSize: "14px",
+            }}
+          >
+            Keine Notizen in diesem Ordner.
           </p>
 
         ) : (
 
-          <ul>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "4px",
+            }}
+          >
 
             {folder.notes.map(
               (entry) => (
 
-                <li
+                <button
                   key={entry.path}
+                  type="button"
+                  onClick={() =>
+                    onNoteClick(
+                      entry.path
+                    )
+                  }
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    padding: "10px 12px",
+                    border: "1px solid #ddd",
+                    borderRadius: "6px",
+                    background: "transparent",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    fontSize: "15px",
+                  }}
                 >
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      onNoteClick(
-                        entry.path
-                      )
-                    }
+                  <span
+                    style={{
+                      marginRight: "10px",
+                      fontSize: "18px",
+                    }}
                   >
-                    📄 {entry.name}
-                  </button>
+                    📄
+                  </span>
 
-                </li>
+                  <span>
+                    {getNoteName(
+                      entry.name
+                    )}
+                  </span>
+
+                </button>
 
               )
             )}
 
-          </ul>
+          </div>
 
         )}
 

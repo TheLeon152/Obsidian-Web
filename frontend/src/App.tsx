@@ -6,6 +6,7 @@ import {
   Routes,
   useNavigate,
   useParams,
+  useLocation,
 } from "react-router-dom";
 
 import {
@@ -145,7 +146,10 @@ function AppRoutes({
   refreshing,
   refreshKey,
 }: AppRoutesProps) {
+
   const navigate = useNavigate();
+
+  const location = useLocation();
 
 
   function handleTagClick(
@@ -262,6 +266,18 @@ function AppRoutes({
       refreshing={refreshing}
       onSearchNoteClick={handleFileClick}
       onFolderClick={handleFolderClick}
+      activePath={
+        location.pathname.startsWith(
+          "/folder/"
+        )
+          ? decodeURIComponent(
+              location.pathname.replace(
+                "/folder/",
+                ""
+              )
+            )
+          : undefined
+      }
     >
       <Routes>
 

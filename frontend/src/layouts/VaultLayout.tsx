@@ -8,12 +8,26 @@ import { SearchBar } from "../components/SearchBar/SearchBar";
 
 interface VaultLayoutProps {
   tree: VaultNode;
-  onFileClick: (path: string) => void;
+
+  onFileClick: (
+    path: string
+  ) => void;
+
   onRefresh: () => void;
+
   refreshing: boolean;
+
   children: ReactNode;
-  onSearchNoteClick: (path: string) => void;
-  onFolderClick: (path: string) => void;
+
+  onSearchNoteClick: (
+    path: string
+  ) => void;
+
+  onFolderClick: (
+    path: string
+  ) => void;
+
+  activePath?: string;
 }
 
 
@@ -25,6 +39,7 @@ export function VaultLayout({
   children,
   onSearchNoteClick,
   onFolderClick,
+  activePath,
 }: VaultLayoutProps) {
   return (
     <div
@@ -61,6 +76,7 @@ export function VaultLayout({
           tree={tree}
           onFileClick={onFileClick}
           onFolderClick={onFolderClick}
+          activePath={activePath}
         />
       </aside>
 
