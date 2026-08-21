@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from app.config import settings
+
 from app.markdown.frontmatter_parser import (
     FrontmatterParser,
 )
@@ -25,6 +27,12 @@ class VaultIndexer:
         vault_path: Path,
     ):
         self.vault_path = vault_path
+
+        self.tasks_folder = (
+            settings.tasks_folder
+            .replace("\\", "/")
+            .strip("/")
+        )
 
         self.tag_parser = TagParser()
 
@@ -94,12 +102,54 @@ class VaultIndexer:
                 )
             )
 
-            tasks = (
-                self.task_parser.extract_tasks(
-                    content,
-                    relative_path,
-                )
+
+            # --------------------------------------------------
+            # Tasks
+            # --------------------------------------------------
+            #
+            # Tasks werden ausschließlich aus dem konfigurierten
+            # Task-Ordner und dessen Unterordnern gelesen.
+            #
+            # Beispiel:
+            #
+            # TASKS_FOLDER=Work/08 Tasks
+            #
+            # Erlaubt:
+            #
+            # Work/08 Tasks/Test.md
+            # Work/08 Tasks/Projekte/DPP.md
+            #
+            # Nicht erlaubt:
+            #
+            # Work/01 Daily/2026-08-21.md
+            # 00_Inbox/Test.md
+            # Projects/Test.md
+            # --------------------------------------------------
+
+            tasks = []
+
+            normalized_path = (
+                relative_path
+                .replace("\\", "/")
+                .strip("/")
             )
+
+            if (
+                normalized_path.startswith(
+                    self.tasks_folder + "/"
+                )
+            ):
+                tasks = (
+                    self.task_parser.extract_tasks(
+                        content,
+                        relative_path,
+                    )
+                )
+
+
+            # --------------------------------------------------
+            # WikiLinks auflösen
+            # --------------------------------------------------
 
             resolved_links: list[
                 ResolvedLink
@@ -126,6 +176,7 @@ class VaultIndexer:
                     )
                 )
 
+
             index[relative_path] = (
                 IndexedNote(
                     name=path.stem,
@@ -144,9 +195,11 @@ class VaultIndexer:
                     ),
 
                     backlinks=[],
+
                     tasks=tasks,
                 )
             )
+
 
         self._build_backlinks(
             index
@@ -189,7 +242,9 @@ class VaultIndexer:
                     )
                 )
 
+
         for note in index.values():
+
             note.backlinks.sort(
                 key=lambda item:
                     item.path.lower()

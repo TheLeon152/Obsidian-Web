@@ -10,6 +10,8 @@ class Settings(BaseSettings):
 
     vault_path: Path
     google_calendar_url: str
+    inbox_folder: str = "00_Inbox"
+    tasks_folder: str = "10_Tasks"
 
     cors_origins: list[str] = [
         "http://localhost:5173",

@@ -114,3 +114,42 @@ export async function getTaskWorkload(
 
   return response.json();
 }
+
+
+export async function updateTask(
+  path: string,
+  line: number,
+  completed: boolean,
+): Promise<Task> {
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/v1/tasks`,
+    {
+      method: "PATCH",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        path,
+        line,
+        completed,
+      }),
+    },
+  );
+
+
+  if (!response.ok) {
+
+    const detail =
+      await response.text();
+
+    throw new Error(
+      `Failed to update task: ${response.status} ${detail}`,
+    );
+  }
+
+
+  return response.json();
+}

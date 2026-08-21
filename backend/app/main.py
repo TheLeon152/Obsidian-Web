@@ -10,6 +10,7 @@ from app.api.tags import router as tags_router
 from app.api.search import router as search_router
 from app.api.tasks import router as tasks_router
 from app.api.calendar import router as calendar_router
+from app.api.inbox import router as inbox_router
 
 
 app = FastAPI(
@@ -41,3 +42,4 @@ app.include_router(tags_router)
 app.include_router(search_router)
 app.include_router(tasks_router)
 app.include_router(calendar_router)
+app.include_router(inbox_router)

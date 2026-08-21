@@ -46,12 +46,18 @@ class TaskService:
 
         tasks = [
             task
-            for task in self.get_open_tasks()
+            for task in self.get_all_tasks()
             if task.deadline == today
         ]
 
-        return self._sort_by_priority(
-            tasks
+        return sorted(
+            tasks,
+            key=lambda task: (
+                task.completed,
+                self._priority_value(
+                    task.priority
+                ),
+            ),
         )
 
 
@@ -124,20 +130,6 @@ class TaskService:
             for task in self.get_open_tasks()
             if task.task_state == "🚧"
         ]
-
-
-    def _sort_by_priority(
-        self,
-        tasks: list[Task],
-    ) -> list[Task]:
-
-        return sorted(
-            tasks,
-            key=lambda task:
-                self._priority_value(
-                    task.priority
-                ),
-        )
 
 
     def _priority_value(

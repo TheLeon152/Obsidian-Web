@@ -1,0 +1,83 @@
+.task-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 8px 10px;
+
+  border-bottom: 1px solid
+    var(--background-modifier-border);
+}
+
+
+.task-row input[type="checkbox"] {
+  flex-shrink: 0;
+
+  width: 16px;
+  height: 16px;
+
+  cursor: pointer;
+}
+
+
+.task-row input[type="checkbox"]:disabled {
+  cursor: wait;
+}
+
+
+.task-text {
+  flex: 1;
+
+  min-width: 0;
+
+  line-height: 1.4;
+}
+
+
+.task-row-completed
+.task-text {
+  text-decoration: line-through;
+
+  color:
+    var(--text-muted);
+}
+
+
+.task-priority {
+  flex-shrink: 0;
+
+  font-size: 0.75rem;
+
+  padding: 2px 7px;
+
+  border-radius: 4px;
+}
+
+
+.task-priority.priority-high {
+  font-weight: 600;
+}
+
+
+.task-priority.priority-medium {
+  opacity: 0.8;
+}
+
+
+.task-priority.priority-low {
+  opacity: 0.6;
+}
+
+
+.task-priority.priority-none {
+  color:
+    var(--text-muted);
+}
+
+
+.task-error {
+  color:
+    var(--text-error);
+
+  font-size: 0.75rem;
+}

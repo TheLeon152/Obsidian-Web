@@ -26,6 +26,7 @@ import { WaitingTasksPage } from "./pages/TaskPage/WaitingTasksPage";
 import { BlockedTasksPage } from "./pages/TaskPage/BlockedTasksPage";
 import { TaskDashboardPage } from "./pages/TaskPage/TaskDashboardPage";
 import { DailyPage } from "./pages/DailyPage/DailyPage";
+import { InboxPage } from "./pages/InboxPage/InboxPage";
 
 
 function App() {
@@ -350,6 +351,14 @@ function AppRoutes({
                 handleFileClick
               }
             />
+          }
+        />
+
+
+        <Route
+          path="/inbox"
+          element={
+            <InboxPage />
           }
         />
 

@@ -16,9 +16,17 @@ import {
   fetchTodayTasks,
 } from "../../api/tasks";
 
-import { WorkloadWidget } from "../../components/WorkloadWidget/WorkloadWidget";
+import {
+  WorkloadWidget,
+} from "../../components/WorkloadWidget/WorkloadWidget";
 
-import { DailyCalendar } from "../../components/DailyCalendar/DailyCalendar";
+import {
+  DailyCalendar,
+} from "../../components/DailyCalendar/DailyCalendar";
+
+import {
+  TaskRow,
+} from "../../components/TaskRow/TaskRow";
 
 
 export function DailyPage() {
@@ -43,45 +51,47 @@ export function DailyPage() {
     useState<string | null>(null);
 
 
-  useEffect(() => {
+  async function loadTasks() {
 
-    async function loadTasks() {
+    try {
 
-      try {
+      setLoading(true);
+      setError(null);
 
-        const [
-          today,
-          upcoming,
-          waiting,
-          blocked,
-        ] = await Promise.all([
-          fetchTodayTasks(),
-          fetchUpcomingTasks(7),
-          fetchWaitingTasks(),
-          fetchBlockedTasks(),
-        ]);
+      const [
+        today,
+        upcoming,
+        waiting,
+        blocked,
+      ] = await Promise.all([
+        fetchTodayTasks(),
+        fetchUpcomingTasks(7),
+        fetchWaitingTasks(),
+        fetchBlockedTasks(),
+      ]);
 
+      setTodayTasks(today);
+      setUpcomingTasks(upcoming);
+      setWaitingTasks(waiting);
+      setBlockedTasks(blocked);
 
-        setTodayTasks(today);
-        setUpcomingTasks(upcoming);
-        setWaitingTasks(waiting);
-        setBlockedTasks(blocked);
+    } catch (error) {
 
-      } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Unknown error"
+      );
 
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Unknown error"
-        );
+    } finally {
 
-      } finally {
+      setLoading(false);
 
-        setLoading(false);
-
-      }
     }
+  }
 
+
+  useEffect(() => {
 
     loadTasks();
 
@@ -165,6 +175,7 @@ export function DailyPage() {
 
         <TodayTasks
           tasks={todayTasks}
+          onTaskUpdated={loadTasks}
         />
 
         <WorkloadWidget />
@@ -178,6 +189,7 @@ export function DailyPage() {
 
       <UpcomingTasks
         tasks={upcomingTasks}
+        onTaskUpdated={loadTasks}
       />
 
 
@@ -189,10 +201,12 @@ export function DailyPage() {
 
         <WaitingTasks
           tasks={waitingTasks}
+          onTaskUpdated={loadTasks}
         />
 
         <BlockedTasks
           tasks={blockedTasks}
+          onTaskUpdated={loadTasks}
         />
 
       </div>
@@ -204,12 +218,23 @@ export function DailyPage() {
 
 interface TaskListProps {
   tasks: Task[];
+  onTaskUpdated: () => void;
 }
 
 
 function TodayTasks({
   tasks,
+  onTaskUpdated,
 }: TaskListProps) {
+
+  const sortedTasks = [
+    ...tasks,
+  ].sort(
+    (a, b) =>
+      Number(a.completed)
+      - Number(b.completed)
+  );
+
 
   return (
     <section className="daily-card">
@@ -219,7 +244,7 @@ function TodayTasks({
       </h2>
 
 
-      {tasks.length === 0 ? (
+      {sortedTasks.length === 0 ? (
 
         <p className="empty-state">
           Keine Aufgaben für heute.
@@ -229,26 +254,13 @@ function TodayTasks({
 
         <div className="task-list">
 
-          {tasks.map(task => (
+          {sortedTasks.map(task => (
 
-            <div
-              className="task-row"
+            <TaskRow
               key={`${task.path}:${task.line}`}
-            >
-
-              <span className="task-text">
-                {task.text}
-              </span>
-
-              <span
-                className={
-                  `task-priority priority-${task.priority ?? "none"}`
-                }
-              >
-                {task.priority ?? "—"}
-              </span>
-
-            </div>
+              task={task}
+              onUpdated={onTaskUpdated}
+            />
 
           ))}
 
@@ -263,7 +275,26 @@ function TodayTasks({
 
 function UpcomingTasks({
   tasks,
+  onTaskUpdated,
 }: TaskListProps) {
+
+  const sortedTasks = [
+    ...tasks,
+  ].sort(
+    (a, b) => {
+
+      const dateA =
+        a.deadline ?? "";
+
+      const dateB =
+        b.deadline ?? "";
+
+      return dateA.localeCompare(
+        dateB
+      );
+    }
+  );
+
 
   return (
     <section className="daily-card">
@@ -273,7 +304,7 @@ function UpcomingTasks({
       </h2>
 
 
-      {tasks.length === 0 ? (
+      {sortedTasks.length === 0 ? (
 
         <p className="empty-state">
           Keine bevorstehenden Deadlines.
@@ -281,72 +312,24 @@ function UpcomingTasks({
 
       ) : (
 
-        <table className="task-table">
+        <div className="task-list">
 
-          <thead>
+          {sortedTasks.map(task => (
 
-            <tr>
+            <TaskRow
+              key={`${task.path}:${task.line}`}
+              task={task}
+              onUpdated={onTaskUpdated}
+              secondaryContent={(
+                <span>
+                  📅 {formatDate(task.deadline)}
+                </span>
+              )}
+            />
 
-              <th>
-                Task
-              </th>
+          ))}
 
-              <th>
-                Bereich
-              </th>
-
-              <th>
-                Deadline
-              </th>
-
-              <th>
-                Priorität
-              </th>
-
-            </tr>
-
-          </thead>
-
-
-          <tbody>
-
-            {tasks.map(task => (
-
-              <tr
-                key={`${task.path}:${task.line}`}
-              >
-
-                <td>
-                  {task.text}
-                </td>
-
-                <td>
-                  {task.path}
-                </td>
-
-                <td>
-                  {formatDate(task.deadline)}
-                </td>
-
-                <td>
-
-                  <span
-                    className={
-                      `task-priority priority-${task.priority ?? "none"}`
-                    }
-                  >
-                    {task.priority ?? "—"}
-                  </span>
-
-                </td>
-
-              </tr>
-
-            ))}
-
-          </tbody>
-
-        </table>
+        </div>
 
       )}
 
@@ -355,26 +338,28 @@ function UpcomingTasks({
 }
 
 
-function formatDate(
-  value: string | null
-): string {
-
-  if (!value) {
-    return "—";
-  }
-
-  const date =
-    new Date(`${value}T00:00:00`);
-
-  return date.toLocaleDateString(
-    "de-DE"
-  );
-}
-
-
 function WaitingTasks({
   tasks,
+  onTaskUpdated,
 }: TaskListProps) {
+
+  const sortedTasks = [
+    ...tasks,
+  ].sort(
+    (a, b) => {
+
+      const dateA =
+        a.follow_up ?? "9999-12-31";
+
+      const dateB =
+        b.follow_up ?? "9999-12-31";
+
+      return dateA.localeCompare(
+        dateB
+      );
+    }
+  );
+
 
   return (
     <section className="daily-card">
@@ -384,7 +369,7 @@ function WaitingTasks({
       </h2>
 
 
-      {tasks.length === 0 ? (
+      {sortedTasks.length === 0 ? (
 
         <p className="empty-state">
           Keine Waiting Tasks.
@@ -394,27 +379,26 @@ function WaitingTasks({
 
         <div className="task-list">
 
-          {tasks.map(task => (
+          {sortedTasks.map(task => (
 
-            <div
-              className="task-row task-row-column"
+            <TaskRow
               key={`${task.path}:${task.line}`}
-            >
+              task={task}
+              onUpdated={onTaskUpdated}
+              secondaryContent={(
+                <>
+                  <span>
+                    Wartet auf:{" "}
+                    {task.waiting_for ?? "—"}
+                  </span>
 
-              <strong>
-                {task.text}
-              </strong>
-
-              <span>
-                {task.waiting_for ?? "—"}
-              </span>
-
-              <small>
-                Nachfassen:{" "}
-                {formatDate(task.follow_up)}
-              </small>
-
-            </div>
+                  <span>
+                    Nachfassen:{" "}
+                    {formatDate(task.follow_up)}
+                  </span>
+                </>
+              )}
+            />
 
           ))}
 
@@ -429,6 +413,7 @@ function WaitingTasks({
 
 function BlockedTasks({
   tasks,
+  onTaskUpdated,
 }: TaskListProps) {
 
   return (
@@ -451,21 +436,17 @@ function BlockedTasks({
 
           {tasks.map(task => (
 
-            <div
-              className="task-row task-row-column"
+            <TaskRow
               key={`${task.path}:${task.line}`}
-            >
-
-              <strong>
-                {task.text}
-              </strong>
-
-              <span>
-                Blockiert durch:{" "}
-                {task.blocked_by ?? "—"}
-              </span>
-
-            </div>
+              task={task}
+              onUpdated={onTaskUpdated}
+              secondaryContent={(
+                <span>
+                  Blockiert durch:{" "}
+                  {task.blocked_by ?? "—"}
+                </span>
+              )}
+            />
 
           ))}
 
@@ -474,5 +455,22 @@ function BlockedTasks({
       )}
 
     </section>
+  );
+}
+
+
+function formatDate(
+  value: string | null
+): string {
+
+  if (!value) {
+    return "—";
+  }
+
+  const date =
+    new Date(`${value}T00:00:00`);
+
+  return date.toLocaleDateString(
+    "de-DE"
   );
 }

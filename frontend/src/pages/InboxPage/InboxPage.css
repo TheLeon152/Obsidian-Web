@@ -1,0 +1,442 @@
+.inbox-page {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+
+.inbox-header {
+  margin-bottom: 20px;
+}
+
+
+.inbox-header h1 {
+  margin: 0 0 4px 0;
+}
+
+
+.inbox-header p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+
+/* ============================================================
+   Layout
+   ============================================================ */
+
+.inbox-layout {
+  display: grid;
+
+  grid-template-columns:
+    280px
+    minmax(0, 1fr);
+
+  height: calc(100vh - 180px);
+
+  min-height: 500px;
+
+  border:
+    1px solid
+    var(--background-modifier-border);
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  background:
+    var(--background-primary);
+}
+
+
+/* ============================================================
+   Sidebar
+   ============================================================ */
+
+.inbox-sidebar {
+  display: flex;
+
+  flex-direction: column;
+
+  border-right:
+    1px solid
+    var(--background-modifier-border);
+
+  background:
+    var(--background-secondary);
+}
+
+
+.inbox-sidebar-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 14px 16px;
+
+  border-bottom:
+    1px solid
+    var(--background-modifier-border);
+}
+
+
+.inbox-sidebar-header h2 {
+  margin: 0;
+
+  font-size: 1rem;
+}
+
+
+.inbox-sidebar-header span {
+  color: var(--text-muted);
+
+  font-size: 0.8rem;
+}
+
+
+/* ============================================================
+   Neue Note
+   ============================================================ */
+
+.inbox-create {
+  display: flex;
+
+  gap: 6px;
+
+  padding: 10px;
+
+  border-bottom:
+    1px solid
+    var(--background-modifier-border);
+}
+
+
+.inbox-create input {
+  min-width: 0;
+
+  flex: 1;
+
+  padding:
+    7px 9px;
+
+  border:
+    1px solid
+    var(--background-modifier-border);
+
+  border-radius: 5px;
+
+  background:
+    var(--background-primary);
+
+  color:
+    var(--text-normal);
+}
+
+
+.inbox-create button {
+  padding:
+    7px 10px;
+
+  border: none;
+
+  border-radius: 5px;
+
+  background:
+    var(--interactive-accent);
+
+  color:
+    var(--text-on-accent);
+
+  cursor: pointer;
+}
+
+
+.inbox-create button:disabled {
+  opacity: 0.5;
+
+  cursor: default;
+}
+
+
+/* ============================================================
+   Notizliste
+   ============================================================ */
+
+.inbox-note-list {
+  flex: 1;
+
+  overflow-y: auto;
+}
+
+
+.inbox-note-item {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  width: 100%;
+
+  padding:
+    10px 14px;
+
+  border: none;
+
+  border-bottom:
+    1px solid
+    var(--background-modifier-border);
+
+  background:
+    transparent;
+
+  color:
+    var(--text-normal);
+
+  text-align: left;
+
+  cursor: pointer;
+}
+
+
+.inbox-note-item:hover {
+  background:
+    var(--background-modifier-hover);
+}
+
+
+.inbox-note-item.selected {
+  background:
+    var(--background-modifier-hover);
+
+  border-left:
+    3px solid
+    var(--interactive-accent);
+
+  padding-left:
+    11px;
+}
+
+
+.inbox-note-item span {
+  width: 100%;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  text-overflow: ellipsis;
+
+  font-size: 0.85rem;
+}
+
+
+.inbox-note-item small {
+  margin-top: 3px;
+
+  color:
+    var(--text-muted);
+
+  font-size: 0.7rem;
+}
+
+
+.inbox-empty {
+  padding:
+    20px 14px;
+
+  color:
+    var(--text-muted);
+
+  font-size: 0.85rem;
+}
+
+
+/* ============================================================
+   Editor
+   ============================================================ */
+
+.inbox-editor {
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+
+  background:
+    var(--background-primary);
+}
+
+
+.inbox-editor-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding:
+    12px 16px;
+
+  border-bottom:
+    1px solid
+    var(--background-modifier-border);
+}
+
+
+.inbox-editor-header h2 {
+  margin: 0;
+
+  font-size: 1rem;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+
+.inbox-editor-header button {
+  flex-shrink: 0;
+
+  padding:
+    7px 14px;
+
+  border: none;
+
+  border-radius: 5px;
+
+  background:
+    var(--interactive-accent);
+
+  color:
+    var(--text-on-accent);
+
+  cursor: pointer;
+}
+
+
+.inbox-editor-header button:disabled {
+  opacity: 0.5;
+
+  cursor: default;
+}
+
+
+.inbox-textarea {
+  flex: 1;
+
+  width: 100%;
+
+  min-height: 0;
+
+  box-sizing: border-box;
+
+  resize: none;
+
+  border: none;
+
+  outline: none;
+
+  padding:
+    20px;
+
+  background:
+    var(--background-primary);
+
+  color:
+    var(--text-normal);
+
+  font-family:
+    var(--font-monospace);
+
+  font-size:
+    0.9rem;
+
+  line-height:
+    1.6;
+}
+
+
+.inbox-editor-empty {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  height: 100%;
+
+  padding: 40px;
+
+  text-align: center;
+
+  color:
+    var(--text-muted);
+}
+
+
+.inbox-editor-empty > div {
+  font-size: 2rem;
+
+  margin-bottom: 10px;
+}
+
+
+.inbox-editor-empty h2 {
+  margin:
+    0 0 6px 0;
+
+  color:
+    var(--text-normal);
+
+  font-size: 1.1rem;
+}
+
+
+.inbox-editor-empty p {
+  margin: 0;
+
+  font-size: 0.85rem;
+}
+
+
+.inbox-loading {
+  padding: 20px;
+
+  color:
+    var(--text-muted);
+}
+
+.inbox-editor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+
+/* ============================================================
+   Fehler
+   ============================================================ */
+
+.inbox-error {
+  margin-bottom: 12px;
+
+  padding:
+    10px 12px;
+
+  border:
+    1px solid
+    var(--color-red);
+
+  border-radius: 5px;
+
+  color:
+    var(--color-red);
+}
