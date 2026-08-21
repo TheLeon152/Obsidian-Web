@@ -1,3 +1,5 @@
+import type { Task } from "./task";
+
 
 export interface NoteReference {
   name: string;
@@ -26,4 +28,6 @@ export interface Note {
   resolved_links: ResolvedLink[];
 
   backlinks: NoteReference[];
+
+  tasks: Task[];
 }

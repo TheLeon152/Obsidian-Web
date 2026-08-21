@@ -1,4 +1,4 @@
-import type { Task } from "../../api/tasks";
+import type { Task } from "../../types/task";
 
 
 interface TaskTableProps {

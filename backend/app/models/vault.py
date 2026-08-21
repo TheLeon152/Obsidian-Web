@@ -48,6 +48,11 @@ class Note(BaseModel):
         default_factory=list
     )
 
+    tasks: list[Task] = Field(
+        default_factory=list
+    )
+
+
 class IndexedNote(BaseModel):
     name: str
     path: str

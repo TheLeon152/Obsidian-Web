@@ -1,4 +1,6 @@
 import type { Note } from "../../types/note";
+import type { Task } from "../../types/task";
+
 import { MarkdownRenderer } from "../MarkdownRenderer/MarkdownRenderer";
 import { NoteLink } from "../NoteLink/NoteLink";
 import { NoteProperties } from "../NoteProperties/NoteProperties";
@@ -21,6 +23,8 @@ interface NoteViewerProps {
   onNoteClick: (
     path: string
   ) => void;
+
+  onNoteUpdated?: () => void;
 }
 
 export function NoteViewer({
@@ -30,6 +34,7 @@ export function NoteViewer({
   onWikiLinkClick,
   onTagClick,
   onNoteClick,
+  onNoteUpdated,
 }: NoteViewerProps) {
   if (loading) {
     return (
@@ -96,10 +101,12 @@ export function NoteViewer({
 
         <MarkdownRenderer
           content={note.content}
+          notePath={note.path}
+          tasks={note.tasks}
           onWikiLinkClick={onWikiLinkClick}
           onTagClick={onTagClick}
           onNoteClick={onNoteClick}
-          resolvedLinks={note.resolved_links}
+          onNoteUpdated={onNoteUpdated}
         />
 
       </div>

@@ -6,11 +6,11 @@ import {
   fetchNextTasks,
   fetchWaitingTasks,
   fetchBlockedTasks,
-  type Task,
 } from "../../api/tasks";
 
 import { TaskTable } from "../TaskTable/TaskTable";
 import { TaskSection } from "./TaskSection";
+import type { Task } from "../../types/task";
 
 
 interface TaskDashboardData {

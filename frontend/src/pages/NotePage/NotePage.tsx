@@ -1,7 +1,15 @@
-import { useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+
 import { useParams } from "react-router-dom";
+
 import type { Note } from "../../types/note";
+
 import { getNote } from "../../api/notes";
+
 import { NoteViewer } from "../../components/NoteViewer/NoteViewer";
 
 
@@ -28,7 +36,10 @@ export function NotePage({
   onTagClick,
   onNoteClick,
 }: NotePageProps) {
-  const { "*": notePath } = useParams();
+
+  const { "*": notePath } =
+    useParams();
+
 
   const [note, setNote] =
     useState<Note | null>(null);
@@ -40,38 +51,62 @@ export function NotePage({
     useState<string | null>(null);
 
 
+  const loadNote =
+    useCallback(
+      async () => {
+
+        if (!notePath) {
+          return;
+        }
+
+        setLoading(true);
+        setError(null);
+
+
+        try {
+
+          const decodedPath =
+            decodeURIComponent(
+              notePath
+            );
+
+          const loadedNote =
+            await getNote(
+              decodedPath
+            );
+
+          setNote(
+            loadedNote
+          );
+
+        } catch (error) {
+
+          setError(
+            error instanceof Error
+              ? error.message
+              : "Unknown error"
+          );
+
+          setNote(null);
+
+        } finally {
+
+          setLoading(false);
+
+        }
+      },
+      [notePath]
+    );
+
+
   useEffect(() => {
-    if (!notePath) {
-      return;
-    }
-
-    async function loadNote() {
-      setLoading(true);
-      setError(null);
-
-      try {
-        const decodedPath =
-          decodeURIComponent(notePath!);
-
-        const loadedNote =
-          await getNote(decodedPath);
-
-        setNote(loadedNote);
-      } catch (error) {
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Unknown error"
-        );
-
-        setNote(null);
-      } finally {
-        setLoading(false);
-      }
-    }
 
     loadNote();
-  }, [notePath, refreshKey]);
+
+  }, [
+    loadNote,
+    refreshKey,
+  ]);
 
 
   return (
@@ -79,9 +114,18 @@ export function NotePage({
       note={note}
       loading={loading}
       error={error}
-      onWikiLinkClick={onWikiLinkClick}
-      onTagClick={onTagClick}
-      onNoteClick={onNoteClick}
+      onWikiLinkClick={
+        onWikiLinkClick
+      }
+      onTagClick={
+        onTagClick
+      }
+      onNoteClick={
+        onNoteClick
+      }
+      onNoteUpdated={
+        loadNote
+      }
     />
   );
 }

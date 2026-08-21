@@ -79,6 +79,8 @@ class NoteService:
             resolved_links=metadata.resolved_links,
 
             backlinks=metadata.backlinks,
+
+            tasks=metadata.tasks,
         )
 
 
