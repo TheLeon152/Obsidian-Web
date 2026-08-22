@@ -43,6 +43,8 @@ interface VaultLayoutProps {
   onFolderClick: (
     path: string
   ) => void;
+
+  activePath?: string;
 }
 
 
@@ -54,6 +56,7 @@ export function VaultLayout({
   children,
   onSearchNoteClick,
   onFolderClick,
+  activePath,
 }: VaultLayoutProps) {
 
   return (
@@ -131,6 +134,7 @@ export function VaultLayout({
               onFolderClick={
                 onFolderClick
               }
+              activePath={activePath}
             />
 
           </div>

@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./backend
+
+    env_file:
+      - ./backend/.env
+
+    environment:
+      VAULT_PATH: /vault
+
+    volumes:
+      - "${OBSIDIAN_VAULT_PATH}:/vault"
+  
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: obsidian-web-frontend
+
+    ports:
+      - "80:80"
+
+    depends_on:
+      - backend

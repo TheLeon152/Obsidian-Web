@@ -327,7 +327,6 @@ function MarkdownContent({
   tasks,
   onWikiLinkClick,
   onTagClick,
-  onNoteClick,
   onNoteUpdated,
 }: MarkdownContentProps) {
 

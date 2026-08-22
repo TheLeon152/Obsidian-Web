@@ -22,7 +22,7 @@ export function VaultImage({
     async function resolveAsset() {
       try {
         const response = await fetch(
-          `${API_BASE_URL}/api/v1/assets/resolve/${encodeURIComponent(path)}`
+          `${API_BASE_URL}/v1/assets/resolve/${encodeURIComponent(path)}`
         );
 
         if (!response.ok) {
