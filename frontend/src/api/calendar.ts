@@ -1,18 +1,11 @@
-import { API_BASE_URL } from "../config";
-
 import type { CalendarEvent } from "../types/calendar";
+import { apiFetch } from "./client";
 
 export async function getTodayEvents(): Promise<
   CalendarEvent[]
-> {
-    console.log(
-    "Calendar API URL:",
-    `${API_BASE_URL}/api/v1/calendar/today`
-  );
-
-
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/calendar/today`
+>{
+  const response = await apiFetch(
+    `/api/v1/calendar/today`
   );
 
   if (!response.ok) {

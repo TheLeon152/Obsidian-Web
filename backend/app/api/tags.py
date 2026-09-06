@@ -1,12 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.services.tag_service import TagService
 from app.services import vault_indexer
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/api/v1/tags",
     tags=["tags"],
+    dependencies=[
+        Depends(get_current_user)
+    ],
 )
 
 

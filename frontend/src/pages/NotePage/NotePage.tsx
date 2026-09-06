@@ -27,6 +27,10 @@ interface NotePageProps {
   onNoteClick: (
     path: string
   ) => void;
+
+  onFolderClick: (
+    path: string
+  ) => void;
 }
 
 
@@ -35,6 +39,7 @@ export function NotePage({
   onWikiLinkClick,
   onTagClick,
   onNoteClick,
+  onFolderClick,
 }: NotePageProps) {
 
   const { "*": notePath } =
@@ -114,18 +119,11 @@ export function NotePage({
       note={note}
       loading={loading}
       error={error}
-      onWikiLinkClick={
-        onWikiLinkClick
-      }
-      onTagClick={
-        onTagClick
-      }
-      onNoteClick={
-        onNoteClick
-      }
-      onNoteUpdated={
-        loadNote
-      }
+      onWikiLinkClick={onWikiLinkClick}
+      onTagClick={onTagClick}
+      onNoteClick={onNoteClick}
+      onFolderClick={onFolderClick}
+      onNoteUpdated={loadNote}
     />
   );
 }

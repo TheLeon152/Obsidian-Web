@@ -5,7 +5,7 @@ import {
 
 import {
   fetchNotesForTag,
-} from "../../api/tagsApi";
+} from "../../api/tags";
 
 
 interface TagPageProps {

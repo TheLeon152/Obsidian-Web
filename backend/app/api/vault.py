@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from app.config import settings
 from app.services.vault_service import VaultService
@@ -8,11 +8,15 @@ from app.models.vault import (
     FolderContent,
     VaultNode,
 )
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/api/v1/vault",
     tags=["vault"],
+    dependencies=[
+        Depends(get_current_user)
+    ],
 )
 
 

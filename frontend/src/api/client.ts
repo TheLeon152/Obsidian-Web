@@ -1,47 +1,144 @@
 import { API_BASE_URL } from "../config";
-import { ApiError } from "./ApiError";
+import { refreshToken } from "./auth";
+
+
+let accessToken: string | null =
+  localStorage.getItem("access_token");
+
+
+let refreshTokenValue: string | null =
+  localStorage.getItem("refresh_token");
+
+
+export function setTokens(
+  access: string,
+  refresh: string,
+) {
+  accessToken = access;
+  refreshTokenValue = refresh;
+
+  localStorage.setItem(
+    "access_token",
+    access,
+  );
+
+  localStorage.setItem(
+    "refresh_token",
+    refresh,
+  );
+}
+
+
+export function clearTokens() {
+  accessToken = null;
+  refreshTokenValue = null;
+
+  localStorage.removeItem(
+    "access_token",
+  );
+
+  localStorage.removeItem(
+    "refresh_token",
+  );
+}
+
+
+export function getAccessToken(): string | null {
+  return accessToken;
+}
+
+
+async function refreshAccessToken(): Promise<boolean> {
+
+  if (!refreshTokenValue) {
+    return false;
+  }
+
+  try {
+
+    const tokens =
+      await refreshToken(
+        refreshTokenValue,
+      );
+
+    setTokens(
+      tokens.access_token,
+      tokens.refresh_token,
+    );
+
+    return true;
+
+  } catch {
+
+    clearTokens();
+
+    return false;
+  }
+}
 
 
 export async function apiFetch(
   path: string,
-  options?: RequestInit,
+  options: RequestInit = {},
 ): Promise<Response> {
 
-  let response: Response;
+  const headers =
+    new Headers(
+      options.headers,
+    );
 
-  try {
-    response = await fetch(
+
+  if (accessToken) {
+
+    headers.set(
+      "Authorization",
+      `Bearer ${accessToken}`,
+    );
+  }
+
+
+  let response =
+    await fetch(
       `${API_BASE_URL}${path}`,
-      options,
+      {
+        ...options,
+        headers,
+      },
     );
-  } catch {
-    throw new Error(
-      "Backend is not reachable.",
-    );
-  }
 
-  if (!response.ok) {
-    let message =
-      `API request failed: ${response.status}`;
 
-    try {
-      const body = await response.json();
+  /*
+   * Access Token abgelaufen.
+   * Einmal Refresh versuchen.
+   */
 
-      if (
-        body &&
-        typeof body.detail === "string"
-      ) {
-        message = body.detail;
-      }
-    } catch {
-      // Response enthält kein JSON.
+  if (
+    response.status === 401 &&
+    refreshTokenValue
+  ) {
+
+    const refreshed =
+      await refreshAccessToken();
+
+
+    if (refreshed) {
+
+      headers.set(
+        "Authorization",
+        `Bearer ${accessToken}`,
+      );
+
+      response =
+        await fetch(
+          `${API_BASE_URL}${path}`,
+          {
+            ...options,
+            headers,
+          },
+        );
     }
-
-    throw new ApiError(
-      response.status,
-      message,
-    );
   }
+
 
   return response;
 }

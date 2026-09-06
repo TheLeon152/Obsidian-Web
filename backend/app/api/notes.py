@@ -1,15 +1,19 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.config import settings
 from app.models.vault import Note, NoteReference
 from app.services.note_resolver import NoteResolver
 from app.services.note_service import NoteService
 from app.services.vault import vault_indexer
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/api/v1/notes",
     tags=["notes"],
+    dependencies=[
+        Depends(get_current_user)
+    ],
 )
 
 
@@ -19,7 +23,7 @@ note_service = NoteService(
 )
 
 note_resolver = NoteResolver(
-    settings.vault_path
+    vault_indexer
 )
 
 

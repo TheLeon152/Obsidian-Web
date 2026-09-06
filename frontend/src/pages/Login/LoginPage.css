@@ -1,0 +1,547 @@
+.login-page {
+  position: relative;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 2rem;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(124, 92, 255, 0.12),
+      transparent 45%
+    ),
+    #0b0b10;
+
+  color: #f4f4f7;
+}
+
+
+/* =========================================================
+   BACKGROUND
+   ========================================================= */
+
+.login-background {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+  overflow: hidden;
+}
+
+
+.login-glow {
+  position: absolute;
+
+  width: 500px;
+  height: 500px;
+
+  border-radius: 50%;
+
+  filter: blur(100px);
+
+  opacity: 0.12;
+}
+
+
+.login-glow-one {
+  top: -250px;
+  left: -150px;
+
+  background: #7c5cff;
+}
+
+
+.login-glow-two {
+  right: -200px;
+  bottom: -250px;
+
+  background: #a855f7;
+}
+
+
+/*
+ * Very subtle network-like background.
+ * This gives the page a visual connection to
+ * the Obsidian Web / spider-web logo.
+ */
+
+.network {
+  position: absolute;
+
+  width: 700px;
+  height: 700px;
+
+  border-radius: 50%;
+
+  opacity: 0.035;
+
+  background:
+    repeating-radial-gradient(
+      circle,
+      transparent 0,
+      transparent 55px,
+      rgba(255, 255, 255, 0.5) 56px,
+      transparent 57px
+    );
+
+  transform: rotate(18deg);
+}
+
+
+.network::before,
+.network::after {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  background:
+    repeating-conic-gradient(
+      from 0deg,
+      rgba(255, 255, 255, 0.4) 0deg,
+      transparent 1deg,
+      transparent 30deg
+    );
+}
+
+
+.network-one {
+  top: -250px;
+  right: -150px;
+}
+
+
+.network-two {
+  bottom: -350px;
+  left: -200px;
+
+  transform: rotate(-25deg);
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.login-card {
+  position: relative;
+
+  width: min(420px, 100%);
+
+  padding: 2.5rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(30, 30, 40, 0.88),
+      rgba(17, 17, 24, 0.94)
+    );
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  z-index: 1;
+}
+
+
+/* =========================================================
+   BRAND
+   ========================================================= */
+
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  gap: 1.25rem;
+}
+
+
+.login-logo {
+  width: 110px;
+  height: 110px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(124, 92, 255, 0.18),
+      rgba(124, 92, 255, 0.05)
+    );
+
+  border: 1px solid rgba(124, 92, 255, 0.2);
+
+  box-shadow:
+    0 0 40px rgba(124, 92, 255, 0.1);
+}
+
+
+.login-logo img {
+  width: 82px;
+  height: 82px;
+
+  object-fit: contain;
+}
+
+
+.login-brand-text h1 {
+  margin: 0;
+
+  font-size: 1.65rem;
+  font-weight: 650;
+
+  letter-spacing: -0.035em;
+}
+
+
+.login-brand-text p {
+  margin: 0.4rem 0 0;
+
+  font-size: 0.9rem;
+
+  color: #858591;
+}
+
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.login-divider {
+  height: 1px;
+
+  margin: 1.75rem 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+}
+
+
+/* =========================================================
+   HEADING
+   ========================================================= */
+
+.login-heading {
+  margin-bottom: 1.75rem;
+}
+
+
+.login-heading h2 {
+  margin: 0;
+
+  font-size: 1.65rem;
+  font-weight: 600;
+
+  letter-spacing: -0.035em;
+}
+
+
+.login-heading p {
+  margin: 0.5rem 0 0;
+
+  font-size: 0.9rem;
+
+  color: #858591;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1.25rem;
+}
+
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.5rem;
+}
+
+
+.form-field label {
+  font-size: 0.82rem;
+  font-weight: 550;
+
+  color: #c7c7cf;
+}
+
+
+.form-field input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 0.85rem 1rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+
+  border-radius: 10px;
+
+  outline: none;
+
+  background: rgba(0, 0, 0, 0.2);
+
+  color: #f4f4f7;
+
+  font-size: 0.95rem;
+
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
+}
+
+
+.form-field input::placeholder {
+  color: #5f5f69;
+}
+
+
+.form-field input:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+
+.form-field input:focus {
+  border-color: rgba(124, 92, 255, 0.75);
+
+  background: rgba(0, 0, 0, 0.28);
+
+  box-shadow:
+    0 0 0 3px rgba(124, 92, 255, 0.12);
+}
+
+
+.form-field input:disabled {
+  opacity: 0.6;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+
+  padding: 0.8rem 0.9rem;
+
+  border: 1px solid rgba(239, 68, 68, 0.2);
+
+  border-radius: 10px;
+
+  background: rgba(239, 68, 68, 0.07);
+
+  color: #fca5a5;
+
+  font-size: 0.84rem;
+}
+
+
+.login-error-icon {
+  width: 20px;
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: rgba(239, 68, 68, 0.15);
+
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.6rem;
+
+  width: 100%;
+
+  margin-top: 0.35rem;
+
+  padding: 0.9rem 1rem;
+
+  border: 0;
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #7c5cff,
+      #6947e8
+    );
+
+  color: white;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 24px rgba(124, 92, 255, 0.2);
+
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease;
+}
+
+
+.login-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  filter: brightness(1.08);
+
+  box-shadow:
+    0 12px 30px rgba(124, 92, 255, 0.28);
+}
+
+
+.login-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+
+.login-button:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+}
+
+
+.login-button-arrow {
+  font-size: 1.15rem;
+
+  transition: transform 150ms ease;
+}
+
+
+.login-button:hover:not(:disabled)
+.login-button-arrow {
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.login-spinner {
+  width: 15px;
+  height: 15px;
+
+  border: 2px solid rgba(255, 255, 255, 0.3);
+
+  border-top-color: white;
+
+  border-radius: 50%;
+
+  animation: login-spin 700ms linear infinite;
+}
+
+
+@keyframes login-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.login-footer {
+  margin: 2rem 0 0;
+
+  text-align: center;
+
+  font-size: 0.72rem;
+
+  color: #4f4f59;
+
+  letter-spacing: 0.04em;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .login-page {
+    padding: 1rem;
+  }
+
+
+  .login-card {
+    padding: 2rem 1.5rem;
+
+    border-radius: 16px;
+  }
+
+
+  .login-logo {
+    width: 56px;
+    height: 56px;
+  }
+
+
+  .login-logo img {
+    width: 40px;
+    height: 40px;
+  }
+
+}

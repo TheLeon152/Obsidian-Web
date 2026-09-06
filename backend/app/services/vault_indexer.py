@@ -60,6 +60,10 @@ class VaultIndexer:
 
     def build(self) -> None:
 
+        # --------------------------------------------------
+        # WikiLink-Index aufbauen
+        # --------------------------------------------------
+
         self.wikilink_resolver.build()
 
         index: dict[
@@ -208,6 +212,23 @@ class VaultIndexer:
         )
 
         self._index = index
+
+
+    def resolve_wikilink(
+        self,
+        target: str,
+    ) -> str | None:
+        """
+        Resolve a WikiLink using the already-built
+        in-memory WikiLink index.
+
+        This avoids scanning the Vault filesystem
+        for every WikiLink click.
+        """
+
+        return self.wikilink_resolver.resolve(
+            target
+        )
 
 
     def _build_backlinks(

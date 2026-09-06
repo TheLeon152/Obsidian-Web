@@ -340,24 +340,6 @@ export function DailyCalendar() {
   return (
     <div className="daily-calendar-container">
 
-      {/* ======================================================
-          Datum
-      ====================================================== */}
-
-      <div className="calendar-date">
-
-        {new Date().toLocaleDateString(
-          "de-DE",
-          {
-            weekday: "long",
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-          }
-        )}
-
-      </div>
-
 
       {/* ======================================================
           Ganztägige Termine

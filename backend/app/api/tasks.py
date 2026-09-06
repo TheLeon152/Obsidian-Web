@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Depends, Query
 
 from app.models.task import Task
 from app.models.task_workload import TaskWorkload
@@ -7,11 +7,15 @@ from app.services.task_service import TaskService
 from app.models.task_update import TaskUpdate
 from app.services.task_write_service import TaskWriteService
 from app.services.vault import vault_indexer
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/api/v1/tasks",
     tags=["tasks"],
+    dependencies=[
+        Depends(get_current_user)
+    ],
 )
 
 

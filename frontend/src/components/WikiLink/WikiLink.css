@@ -2,9 +2,14 @@
   padding: 0;
   border: none;
 
-  background: none;
+  background: transparent;
+
+  color: #00e4fd !important;
 
   font: inherit;
+  text-align: inherit;
+
+  cursor: pointer;
 
   transition:
     color 0.15s ease,
@@ -12,21 +17,22 @@
 }
 
 .wiki-link-resolved {
-  color: inherit;
+  color: #00e4fd !important;
 
   cursor: pointer;
 
   text-decoration: underline;
-  text-decoration-color: rgba(127, 127, 127, 0.5);
+  text-decoration-color: rgba(0, 228, 253, 0.5);
   text-underline-offset: 2px;
 }
 
 .wiki-link-resolved:hover {
+  color: #ffffff !important;
   text-decoration-color: currentColor;
 }
 
 .wiki-link-unresolved {
-  color: var(--text-muted, #888);
+  color: #888888 !important;
 
   cursor: default;
 

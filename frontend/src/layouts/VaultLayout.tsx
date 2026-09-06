@@ -4,6 +4,8 @@ import type {
   ReactNode,
 } from "react";
 
+import { useAuth } from "../auth/AuthContext";
+
 import {
   FileTree,
 } from "../components/FileTree/FileTree";
@@ -58,6 +60,10 @@ export function VaultLayout({
   onFolderClick,
   activePath,
 }: VaultLayoutProps) {
+
+  const {
+    logout,
+  } = useAuth();
 
   return (
     <div className="vault-layout">
@@ -167,6 +173,13 @@ export function VaultLayout({
                 : "Vault aktualisieren"}
             </span>
 
+          </button>
+
+          <button
+            type="button"
+            onClick={logout}
+          >
+            Logout
           </button>
 
         </div>

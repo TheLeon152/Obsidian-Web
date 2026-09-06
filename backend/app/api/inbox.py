@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.config import settings
 
@@ -13,11 +13,15 @@ from app.models.inbox import (
 
 from app.services.inbox import InboxService
 from app.services.vault import vault_indexer
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/api/v1/inbox",
     tags=["inbox"],
+    dependencies=[
+        Depends(get_current_user)
+    ],
 )
 
 

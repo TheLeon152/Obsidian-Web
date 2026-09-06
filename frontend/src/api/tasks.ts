@@ -1,12 +1,12 @@
-import { API_BASE_URL } from "../config";
 import type {
   Task,
   TaskWorkload,
 } from "../types/task";
+import { apiFetch } from "./client";
 
 export async function fetchTasks(): Promise<Task[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks`
+  const response = await apiFetch(
+    `/api/v1/tasks`
   );
 
   if (!response.ok) {
@@ -20,8 +20,8 @@ export async function fetchTasks(): Promise<Task[]> {
 
 
 export async function fetchTodayTasks(): Promise<Task[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks/today`
+  const response = await apiFetch(
+    `/api/v1/tasks/today`
   );
 
   if (!response.ok) {
@@ -37,8 +37,8 @@ export async function fetchTodayTasks(): Promise<Task[]> {
 export async function fetchUpcomingTasks(
   days: number = 7
 ): Promise<Task[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks/upcoming?days=${days}`
+  const response = await apiFetch(
+    `/api/v1/tasks/upcoming?days=${days}`
   );
 
   if (!response.ok) {
@@ -54,8 +54,8 @@ export async function fetchUpcomingTasks(
 export async function fetchNextTasks(
   limit: number = 10
 ): Promise<Task[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks/next?limit=${limit}`
+  const response = await apiFetch(
+    `/api/v1/tasks/next?limit=${limit}`
   );
 
   if (!response.ok) {
@@ -69,8 +69,8 @@ export async function fetchNextTasks(
 
 
 export async function fetchWaitingTasks(): Promise<Task[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks/waiting`
+  const response = await apiFetch(
+    `/api/v1/tasks/waiting`
   );
 
   if (!response.ok) {
@@ -84,8 +84,8 @@ export async function fetchWaitingTasks(): Promise<Task[]> {
 
 
 export async function fetchBlockedTasks(): Promise<Task[]> {
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks/blocked`
+  const response = await apiFetch(
+    `/api/v1/tasks/blocked`
   );
 
   if (!response.ok) {
@@ -102,8 +102,8 @@ export async function getTaskWorkload(
   days: number = 7
 ): Promise<TaskWorkload> {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks/workload?days=${days}`
+  const response = await apiFetch(
+    `/api/v1/tasks/workload?days=${days}`
   );
 
   if (!response.ok) {
@@ -122,8 +122,8 @@ export async function updateTask(
   completed: boolean,
 ): Promise<Task> {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/tasks`,
+  const response = await apiFetch(
+    `/api/v1/tasks`,
     {
       method: "PATCH",
 

@@ -1,16 +1,7 @@
 import type {
   Root,
-  RootContent,
-  Heading,
 } from "mdast";
-
-
-export interface MarkdownSection {
-  depth: number;
-  heading: Heading;
-  content: RootContent[];
-  children: MarkdownSection[];
-}
+import type { MarkdownSection } from "./parseMarkdownSections";
 
 
 export function remarkSections() {
@@ -92,12 +83,5 @@ export function remarkSections() {
       }
 
     }
-
-
-    console.log(
-      "MARKDOWN SECTION TREE:",
-      sections,
-    );
-
   };
 }

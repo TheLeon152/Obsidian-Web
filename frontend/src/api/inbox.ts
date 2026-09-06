@@ -1,14 +1,14 @@
-import { API_BASE_URL } from "../config";
 
 import type { CreateInboxNote, InboxNote, InboxNoteSummary } from "../types/inbox";
+import { apiFetch } from "./client";
 
 
 export async function fetchInboxNotes(): Promise<
   InboxNoteSummary[]
 > {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/inbox`
+  const response = await apiFetch(
+    `/api/v1/inbox`
   );
 
   if (!response.ok) {
@@ -25,8 +25,8 @@ export async function fetchInboxNote(
   filename: string,
 ): Promise<InboxNote> {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/inbox/${encodeURIComponent(
+  const response = await apiFetch(
+    `/api/v1/inbox/${encodeURIComponent(
       filename
     )}`
   );
@@ -45,8 +45,8 @@ export async function createInboxNote(
   note: CreateInboxNote,
 ): Promise<InboxNote> {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/inbox`,
+  const response = await apiFetch(
+    `/api/v1/inbox`,
     {
       method: "POST",
 
@@ -77,8 +77,8 @@ export async function updateInboxNote(
   content: string,
 ): Promise<InboxNote> {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/inbox/${encodeURIComponent(
+  const response = await apiFetch(
+    `/api/v1/inbox/${encodeURIComponent(
       filename
     )}`,
     {
@@ -112,8 +112,8 @@ export async function deleteInboxNote(
   filename: string,
 ): Promise<void> {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/inbox/${encodeURIComponent(
+  const response = await apiFetch(
+    `/api/v1/inbox/${encodeURIComponent(
       filename
     )}`,
     {

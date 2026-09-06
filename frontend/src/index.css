@@ -17,6 +17,12 @@ html {
   box-sizing: inherit;
 }
 
+:root {
+  --text-normal: #e5e5e5;
+  --text-muted: #888;
+  --text-accent: #00e4fd;
+}
+
 body {
   margin: 0;
   padding: 0;

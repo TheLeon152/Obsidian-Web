@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "../config";
+import { apiFetch } from "./client";
 
 
 export interface SearchResult {
@@ -18,8 +18,8 @@ export async function searchNotes(
   query: string
 ): Promise<SearchResponse> {
 
-  const response = await fetch(
-    `${API_BASE_URL}/api/v1/search?q=${encodeURIComponent(query)}`
+  const response = await apiFetch(
+    `/api/v1/search?q=${encodeURIComponent(query)}`
   );
 
   if (!response.ok) {

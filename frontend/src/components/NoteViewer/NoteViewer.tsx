@@ -24,6 +24,10 @@ interface NoteViewerProps {
     path: string
   ) => void;
 
+  onFolderClick: (
+    path: string
+  ) => void;
+
   onNoteUpdated?: () => void;
 }
 
@@ -34,6 +38,7 @@ export function NoteViewer({
   onWikiLinkClick,
   onTagClick,
   onNoteClick,
+  onFolderClick,
   onNoteUpdated,
 }: NoteViewerProps) {
   if (loading) {
@@ -65,7 +70,7 @@ export function NoteViewer({
 
       <Breadcrumbs
         path={note.path}
-        onNavigate={onNoteClick}
+        onNavigate={onFolderClick}
       />
 
       <header className="note-header">
@@ -73,10 +78,6 @@ export function NoteViewer({
         <h1 className="note-title">
           {note.name.replace(/\.md$/i, "")}
         </h1>
-
-        <div className="note-path">
-          {note.path}
-        </div>
 
       </header>
 
@@ -100,7 +101,6 @@ export function NoteViewer({
           ))}
         </div>
       )}
-
 
       <div className="note-content">
 
@@ -146,7 +146,6 @@ export function NoteViewer({
 
             </section>
           )}
-
 
           {note.backlinks.length > 0 && (
             <section className="note-navigation-section">

@@ -11,6 +11,9 @@ services:
 
     volumes:
       - "${OBSIDIAN_VAULT_PATH}:/vault"
+
+    ports:
+      - "8000:8000"
   
   frontend:
     build:

@@ -1,13 +1,8 @@
-import React, {
-  type ReactNode,
-} from "react";
-
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import remarkBreaks from "remark-breaks";
-
-import { remarkObsidianCallouts } from "../../markdown/remarkObsidianCallouts";
 
 import { WikiLink } from "../WikiLink/WikiLink";
 import { Tag } from "../Tag/Tag";
@@ -15,105 +10,82 @@ import { VaultImage } from "../VaultImage/VaultImage";
 import { TaskRow } from "../TaskRow/TaskRow";
 
 import type { Task } from "../../types/task";
-
-import {
-  parseMarkdownSections,
-  type MarkdownSection,
-} from "../../markdown/parseMarkdownSections";
-
-import "highlight.js/styles/github-dark.css";
-
 import { parseObsidianInline } from "../../utils/parseObsidianInline";
 
 import "./MarkdownRenderer.css";
-
+import { parseMarkdownSections, stringifyMarkdown, type MarkdownSection } from "../../markdown/parseMarkdownSections";
+import { remarkObsidianCallouts } from "../../markdown/remarkObsidianCallouts";
 
 interface MarkdownRendererProps {
   content: string;
-
-  tasks: Task[];
-
-  onWikiLinkClick: (
-    target: string
-  ) => void;
-
-  onNoteClick: (
-    path: string
-  ) => void;
-
-  onTagClick?: (
-    tag: string
-  ) => void;
-
+  tasks?: Task[];
+  onWikiLinkClick: (target: string) => void;
+  onNoteClick: (path: string) => void;
+  onTagClick?: (tag: string) => void;
   onNoteUpdated?: () => void;
 }
 
+interface MarkdownSectionRendererProps {
+  section: MarkdownSection;
+  tasks?: Task[];
+  onWikiLinkClick: (target: string) => void;
+  onTagClick?: (tag: string) => void;
+  onNoteClick: (path: string) => void;
+  onNoteUpdated?: () => void;
+
+  /**
+   * Hides the heading itself while still rendering
+   * the section content and its children.
+   *
+   * Used for the first H1 because the note title
+   * is already rendered by NoteViewer.
+   */
+  hideHeading?: boolean;
+}
+
+interface MarkdownContentProps {
+  content: string;
+  tasks?: Task[];
+  onWikiLinkClick: (target: string) => void;
+  onTagClick?: (tag: string) => void;
+  onNoteClick: (path: string) => void;
+  onNoteUpdated?: () => void;
+}
 
 export function MarkdownRenderer({
   content,
   tasks,
   onWikiLinkClick,
-  onTagClick,
   onNoteClick,
+  onTagClick,
   onNoteUpdated,
 }: MarkdownRendererProps) {
-
-  const sections =
-    parseMarkdownSections(
-      content
-    );
-
+  const sections = parseMarkdownSections(content);
 
   return (
     <div className="markdown-renderer">
-
-      {sections.map(
-        (section, index) => (
-          <MarkdownSectionRenderer
-            key={index}
-            section={section}
-            tasks={tasks}
-            onWikiLinkClick={
-              onWikiLinkClick
-            }
-            onTagClick={
-              onTagClick
-            }
-            onNoteClick={
-              onNoteClick
-            }
-            onNoteUpdated={
-              onNoteUpdated
-            }
-          />
-        )
-      )}
-
+      {sections.map((section, index) => (
+        <MarkdownSectionRenderer
+          key={index}
+          section={section}
+          tasks={tasks}
+          onWikiLinkClick={onWikiLinkClick}
+          onTagClick={onTagClick}
+          onNoteClick={onNoteClick}
+          onNoteUpdated={onNoteUpdated}
+          /*
+           * The note title is already rendered by NoteViewer.
+           * Therefore only hide the first root-level H1.
+           *
+           * We deliberately do not hide every H1, because a
+           * document could theoretically contain multiple H1s.
+           */
+          hideHeading={index === 0 && section.depth === 1}
+        />
+      ))}
     </div>
   );
 }
-
-
-interface MarkdownSectionRendererProps {
-  section: MarkdownSection;
-
-  tasks: Task[];
-
-  onWikiLinkClick: (
-    target: string
-  ) => void;
-
-  onNoteClick: (
-    path: string
-  ) => void;
-
-  onTagClick?: (
-    tag: string
-  ) => void;
-
-  onNoteUpdated?: () => void;
-}
-
 
 function MarkdownSectionRenderer({
   section,
@@ -122,743 +94,404 @@ function MarkdownSectionRenderer({
   onTagClick,
   onNoteClick,
   onNoteUpdated,
+  hideHeading = false,
 }: MarkdownSectionRendererProps) {
+  const [collapsed, setCollapsed] = useState(false);
 
-  const [collapsed, setCollapsed] =
-    React.useState(false);
-
+  /**
+   * The hidden title must never collapse its content.
+   * Otherwise hiding the heading would also hide the entire
+   * first section.
+   */
+  const isCollapsed = hideHeading ? false : collapsed;
 
   function toggleCollapsed() {
-    setCollapsed(
-      value => !value
-    );
+    setCollapsed((value) => !value);
   }
-
 
   return (
     <section
-      className={
-        `markdown-section markdown-section-depth-${section.depth}` +
-        (collapsed
-          ? " markdown-section-collapsed"
-          : "")
-      }
+      className={`markdown-section markdown-section-depth-${section.depth}`}
     >
-
-      <button
-        type="button"
-        className="markdown-section-heading"
-        onClick={toggleCollapsed}
-        aria-expanded={!collapsed}
-      >
-
-        <span
-          className="markdown-section-toggle"
-          aria-hidden="true"
+      {!hideHeading && (
+        <button
+          type="button"
+          className="markdown-section-heading"
+          onClick={toggleCollapsed}
+          aria-expanded={!isCollapsed}
         >
-          {collapsed ? "▸" : "▾"}
-        </span>
-
-        <span className="markdown-section-heading-content">
-
-          <ReactMarkdown
-            remarkPlugins={[
-              remarkGfm,
-              remarkBreaks,
-              remarkObsidianCallouts,
-            ]}
-            rehypePlugins={[
-              rehypeHighlight,
-            ]}
-            components={{
-              h1: ({ children }) => (
-                <h1>
-                  {renderChildren(
-                    children,
-                    onWikiLinkClick,
-                    onTagClick ?? (() => {}),
-                  )}
-                </h1>
-              ),
-
-              h2: ({ children }) => (
-                <h2>
-                  {renderChildren(
-                    children,
-                    onWikiLinkClick,
-                    onTagClick ?? (() => {}),
-                  )}
-                </h2>
-              ),
-
-              h3: ({ children }) => (
-                <h3>
-                  {renderChildren(
-                    children,
-                    onWikiLinkClick,
-                    onTagClick ?? (() => {}),
-                  )}
-                </h3>
-              ),
-
-              h4: ({ children }) => (
-                <h4>
-                  {renderChildren(
-                    children,
-                    onWikiLinkClick,
-                    onTagClick ?? (() => {}),
-                  )}
-                </h4>
-              ),
-
-              h5: ({ children }) => (
-                <h5>
-                  {renderChildren(
-                    children,
-                    onWikiLinkClick,
-                    onTagClick ?? (() => {}),
-                  )}
-                </h5>
-              ),
-
-              h6: ({ children }) => (
-                <h6>
-                  {renderChildren(
-                    children,
-                    onWikiLinkClick,
-                    onTagClick ?? (() => {}),
-                  )}
-                </h6>
-              ),
-            }}
+          <span
+            className="markdown-section-toggle"
+            aria-hidden="true"
           >
-            {renderHeadingMarkdown(
-              section.heading
-            )}
-          </ReactMarkdown>
+            {isCollapsed ? "▸" : "▾"}
+          </span>
 
-        </span>
+          <span className="markdown-section-heading-content">
+            <ReactMarkdown
+              remarkPlugins={[
+                remarkGfm,
+                remarkBreaks,
+                remarkObsidianCallouts,
+              ]}
+              rehypePlugins={[rehypeHighlight]}
+              components={{
+                p: ({ children }) => <>{children}</>,
+              }}
+            >
+              {renderHeadingMarkdown(section.heading)}
+            </ReactMarkdown>
+          </span>
+        </button>
+      )}
 
-      </button>
-
-
-      {!collapsed && (
+      {!isCollapsed && (
         <>
-
           {section.content.length > 0 && (
             <MarkdownContent
-              content={section.content}
+              content={stringifyMarkdown(section.content)}
               tasks={tasks}
-              onWikiLinkClick={
-                onWikiLinkClick
-              }
-              onTagClick={
-                onTagClick
-              }
-              onNoteClick={
-                onNoteClick
-              }
-              onNoteUpdated={
-                onNoteUpdated
-              }
+              onWikiLinkClick={onWikiLinkClick}
+              onTagClick={onTagClick}
+              onNoteClick={onNoteClick}
+              onNoteUpdated={onNoteUpdated}
             />
           )}
 
-
           {section.children.length > 0 && (
             <div className="markdown-section-children">
-
-              {section.children.map(
-                (child, index) => (
-                  <MarkdownSectionRenderer
-                    key={index}
-                    section={child}
-                    tasks={tasks}
-                    onWikiLinkClick={
-                      onWikiLinkClick
-                    }
-                    onTagClick={
-                      onTagClick
-                    }
-                    onNoteClick={
-                      onNoteClick
-                    }
-                    onNoteUpdated={
-                      onNoteUpdated
-                    }
-                  />
-                )
-              )}
-
+              {section.children.map((child, index) => (
+                <MarkdownSectionRenderer
+                  key={index}
+                  section={child}
+                  tasks={tasks}
+                  onWikiLinkClick={onWikiLinkClick}
+                  onTagClick={onTagClick}
+                  onNoteClick={onNoteClick}
+                  onNoteUpdated={onNoteUpdated}
+                />
+              ))}
             </div>
           )}
-
         </>
       )}
-
     </section>
   );
 }
-
-
-interface MarkdownContentProps {
-  content: MarkdownSection["content"];
-
-  tasks: Task[];
-
-  onWikiLinkClick: (
-    target: string
-  ) => void;
-
-  onNoteClick: (
-    path: string
-  ) => void;
-
-  onTagClick?: (
-    tag: string
-  ) => void;
-
-  onNoteUpdated?: () => void;
-}
-
 
 function MarkdownContent({
   content,
   tasks,
   onWikiLinkClick,
   onTagClick,
+  onNoteClick,
   onNoteUpdated,
 }: MarkdownContentProps) {
-
   return (
-    <ReactMarkdown
-      remarkPlugins={[
-        remarkGfm,
-        remarkBreaks,
-        remarkObsidianCallouts,
-      ]}
-      rehypePlugins={[
-        rehypeHighlight,
-      ]}
-      components={{
-
-        p: ({ children }) => (
-          <p>
-            {renderChildren(
-              children,
-              onWikiLinkClick,
-              onTagClick ?? (() => {}),
-            )}
-          </p>
-        ),
-
-
-        a: ({
-          href,
-          children,
-        }) => {
-
-          const isExternal =
-            href?.startsWith(
-              "http://"
-            ) ||
-            href?.startsWith(
-              "https://"
-            );
-
-
-          function handleClick(
-            event: React.MouseEvent<HTMLAnchorElement>
-          ) {
-
-            if (
-              !href ||
-              isExternal
-            ) {
-              return;
-            }
-
-            event.preventDefault();
-
-            onWikiLinkClick(
-              href
-            );
-          }
-
-
-          return (
-            <a
-              href={href}
-              target={
-                isExternal
-                  ? "_blank"
-                  : undefined
-              }
-              rel={
-                isExternal
-                  ? "noopener noreferrer"
-                  : undefined
-              }
-              onClick={
-                handleClick
-              }
-            >
-              {children}
-            </a>
-          );
-        },
-
-
-        li: ({
-          children,
-        }) => {
-
-          const task =
-            findTaskForListItem(
-              children,
-              tasks,
-            );
-
-
-          if (task) {
-
-            return (
-              <li className="markdown-task-item">
-
-                <TaskRow
-                  task={task}
-                  onUpdated={() => {
-                    onNoteUpdated?.();
-                  }}
-                />
-
-              </li>
-            );
-          }
-
-
-          return (
-            <li>
+    <div className="markdown-content">
+      <ReactMarkdown
+        remarkPlugins={[
+          remarkGfm,
+          remarkBreaks,
+          remarkObsidianCallouts,
+        ]}
+        rehypePlugins={[rehypeHighlight]}
+        components={{
+          p: ({ children }) => (
+            <p>
               {renderChildren(
                 children,
                 onWikiLinkClick,
-                onTagClick ?? (() => {}),
+                onTagClick,
+                onNoteClick
               )}
-            </li>
-          );
-        },
+            </p>
+          ),
 
+          a: ({ href, children, ...props }) => {
+            if (!href) {
+              return <a {...props}>{children}</a>;
+            }
 
-        input: ({
-          type,
-          checked,
-          ...props
-        }) => {
+            return (
+              <a
+                {...props}
+                href={href}
+                onClick={(event) => {
+                  event.preventDefault();
 
-          if (
-            type === "checkbox"
-          ) {
+                  if (href.startsWith("http://") || href.startsWith("https://")) {
+                    window.open(href, "_blank", "noopener,noreferrer");
+                    return;
+                  }
+
+                  onNoteClick(href);
+                }}
+              >
+                {children}
+              </a>
+            );
+          },
+
+          li: ({ children, ...props }) => {
+            const task = findTaskForListItem(children, tasks);
+
+            if (task) {
+              return (
+                <li {...props}>
+                  <TaskRow
+                    task={task}
+                    onUpdated={onNoteUpdated}
+                  />
+                </li>
+              );
+            }
+
+            return (
+              <li {...props}>
+                {renderChildren(
+                  children,
+                  onWikiLinkClick,
+                  onTagClick,
+                  onNoteClick
+                )}
+              </li>
+            );
+          },
+
+          input: ({ type, checked, ...props }) => {
+            if (type !== "checkbox") {
+              return <input type={type} {...props} />;
+            }
 
             return (
               <input
-                {...props}
                 type="checkbox"
                 checked={checked}
                 readOnly
+                {...props}
               />
             );
-          }
+          },
 
+          img: ({ src, alt }) => {
+            if (!src) {
+              return null;
+            }
 
-          return (
-            <input
-              {...props}
-              type={type}
-            />
-          );
-        },
-
-      }}
-    >
-      {contentToMarkdown(
-        content
-      )}
-    </ReactMarkdown>
+            return (
+              <VaultImage
+                path={src}
+                alt={alt ?? ""}
+              />
+            );
+          },
+        }}
+      >
+        {content}
+      </ReactMarkdown>
+    </div>
   );
 }
 
-
-function renderHeadingMarkdown(
-  heading: MarkdownSection["heading"],
-): string {
-
-  const prefix =
-    "#".repeat(
-      heading.depth
-    );
-
-  const text =
-    heading.children
-      .map(
-        child =>
-          mdastInlineNodeToMarkdown(
-            child
-          )
-      )
-      .join("");
-
-  return `${prefix} ${text}`;
+/**
+ * Converts an mdast heading back into markdown so that
+ * ReactMarkdown can render inline formatting, WikiLinks,
+ * tags, etc.
+ */
+function renderHeadingMarkdown(heading: MarkdownSection["heading"]): string {
+  return nodeToMarkdown(heading);
 }
 
-
-function mdastInlineNodeToMarkdown(
-  node: MarkdownSection["heading"]["children"][number],
-): string {
+function nodeToMarkdown(node: any): string {
+  if (!node) {
+    return "";
+  }
 
   switch (node.type) {
+    case "heading":
+      return `${"#".repeat(node.depth)} ${renderChildrenToMarkdown(
+        node.children
+      )}`;
 
     case "text":
-      return node.value;
-
-
-    case "inlineCode":
-      return `\`${node.value}\``;
-
+      return node.value ?? "";
 
     case "strong":
-      return `**${
-        node.children
-          .map(
-            mdastInlineNodeToMarkdown
-          )
-          .join("")
-      }**`;
-
+      return `**${renderChildrenToMarkdown(node.children)}**`;
 
     case "emphasis":
-      return `*${
-        node.children
-          .map(
-            mdastInlineNodeToMarkdown
-          )
-          .join("")
-      }*`;
-
+      return `*${renderChildrenToMarkdown(node.children)}*`;
 
     case "delete":
-      return `~~${
-        node.children
-          .map(
-            mdastInlineNodeToMarkdown
-          )
-          .join("")
-      }~~`;
+      return `~~${renderChildrenToMarkdown(node.children)}~~`;
 
+    case "inlineCode":
+      return `\`${node.value ?? ""}\``;
 
     case "link":
-      return `[${node.children
-        .map(
-          mdastInlineNodeToMarkdown
-        )
-        .join("")}](${node.url})`;
-
+      return `[${renderChildrenToMarkdown(node.children)}](${node.url})`;
 
     case "image":
       return `![${node.alt ?? ""}](${node.url})`;
 
-
     case "break":
-      return "\\\n";
-
-
-    case "html":
-      return node.value;
-
-
-    default:
-      return "";
-  }
-}
-
-
-function contentToMarkdown(
-  content: MarkdownSection["content"],
-): string {
-
-  return content
-    .map(
-      node =>
-        nodeToMarkdown(
-          node
-        )
-    )
-    .join("\n\n");
-}
-
-
-function nodeToMarkdown(
-  node: MarkdownSection["content"][number],
-): string {
-
-  switch (node.type) {
-
-    case "paragraph":
-      return node.children
-        .map(
-          mdastInlineNodeToMarkdown
-        )
-        .join("");
-
-
-    case "heading":
-      return renderHeadingMarkdown(
-        node
-      );
-
-
-    case "code": {
-      const language =
-        node.lang ?? "";
-
-      return [
-        `\`\`\`${language}`,
-        node.value,
-        "```",
-      ].join("\n");
-    }
-
-
-    case "thematicBreak":
-      return "---";
-
-
-    case "blockquote":
-      return node.children
-        .map(
-          child =>
-            nodeToMarkdown(child)
-        )
-        .map(
-          line =>
-            line
-              .split("\n")
-              .map(
-                value =>
-                  `> ${value}`
-              )
-              .join("\n")
-        )
-        .join("\n");
-
-
-    case "list": {
-
-      return node.children
-        .map(
-          (item, index) => {
-
-            const prefix =
-              node.ordered
-                ? `${(node.start ?? 1) + index}. `
-                : "- ";
-
-            const content =
-              item.children
-                .map(
-                  child =>
-                    nodeToMarkdown(child)
-                )
-                .join("\n");
-
-            const lines =
-              content.split("\n");
-
-            return [
-              prefix + lines[0],
-              ...lines
-                .slice(1)
-                .map(
-                  line =>
-                    `  ${line}`
-                ),
-            ].join("\n");
-          }
-        )
-        .join("\n");
-    }
-
+      return "\n";
 
     case "html":
-      return node.value;
-
+      return node.value ?? "";
 
     default:
-      return "";
+      return renderChildrenToMarkdown(node.children ?? []);
   }
 }
 
-
-function findTaskForListItem(
-  children: ReactNode,
-  tasks: Task[],
-): Task | null {
-
-  const text =
-    extractText(children)
-      .replace(
-        /^\s*/,
-        "",
-      )
-      .trim();
-
-
-  if (!text) {
-    return null;
-  }
-
-
-  return (
-    tasks.find(
-      task =>
-        task.text.trim() === text
-    ) ?? null
-  );
+function renderChildrenToMarkdown(children: any[] = []): string {
+  return children.map((child) => nodeToMarkdown(child)).join("");
 }
 
-
-function extractText(
-  children: ReactNode,
-): string {
-
-  let result = "";
-
-
-  React.Children.forEach(
-    children,
-    child => {
-
-      if (
-        typeof child === "string" ||
-        typeof child === "number"
-      ) {
-
-        result += String(child);
-
-        return;
-      }
-
-
-      if (
-        React.isValidElement<{
-          children?: ReactNode;
-        }>(child)
-      ) {
-
-        result += extractText(
-          child.props.children
-        );
-      }
-
-    }
-  );
-
-
-  return result;
-}
-
-
+/**
+ * Handles Obsidian-specific inline syntax inside
+ * ReactMarkdown-generated children.
+ */
 function renderChildren(
-  children: ReactNode,
-  onWikiLinkClick: (
-    target: string
-  ) => void,
-  onTagClick: (
-    tag: string
-  ) => void,
-) {
+  children: React.ReactNode,
+  onWikiLinkClick: (target: string) => void,
+  onTagClick: ((tag: string) => void) | undefined,
+  onNoteClick: (path: string) => void
+): React.ReactNode {
+  if (children === null || children === undefined) {
+    return children;
+  }
 
-  return React.Children.map(
-    children,
-    child => {
+  if (typeof children === "string") {
+    const parts = parseObsidianInline(children);
 
-      if (
-        typeof child !== "string"
-      ) {
-        return child;
-      }
+    return parts.map((part, index) => {
+      switch (part.type) {
+        case "text":
+          return (
+            <React.Fragment key={index}>
+              {part.content}
+            </React.Fragment>
+          );
 
-
-      const parts =
-        parseObsidianInline(
-          child
-        );
-
-
-      return parts.map(
-        (
-          part,
-          index,
-        ) => {
-
-          if (
-            part.type === "text"
-          ) {
-
-            return (
-              <span
-                key={index}
-              >
-                {part.content}
-              </span>
-            );
-          }
-
-
-          if (
-            part.type === "image"
-          ) {
-
-            return (
-              <VaultImage
-                key={index}
-                path={part.path}
-              />
-            );
-          }
-
-
-          if (
-            part.type === "tag"
-          ) {
-
-            return (
-              <Tag
-                key={index}
-                tag={part.tag}
-                onClick={
-                  onTagClick
-                }
-              />
-            );
-          }
-
-
+        case "wikilink":
           return (
             <WikiLink
               key={index}
-              target={
-                part.target
-              }
-              displayText={
-                part.displayText
-              }
-              onClick={
-                onWikiLinkClick
-              }
+              target={part.target}
+              displayText={part.displayText}
+              onClick={onWikiLinkClick}
             />
           );
-        }
-      );
+
+        case "image":
+          return (
+            <VaultImage
+              path={part.path}
+              alt={part.path}
+            />
+          );
+
+        case "tag":
+          if (!onTagClick) {
+            return (
+              <React.Fragment key={index}>
+                #{part.tag}
+              </React.Fragment>
+            );
+          }
+
+          return (
+            <Tag
+              key={index}
+              tag={part.tag}
+              onClick={onTagClick}
+            />
+          );
+
+        default:
+          return null;
+      }
+    });
+  }
+
+  if (Array.isArray(children)) {
+    return children.map((child, index) => (
+      <React.Fragment key={index}>
+        {renderChildren(
+          child,
+          onWikiLinkClick,
+          onTagClick,
+          onNoteClick
+        )}
+      </React.Fragment>
+    ));
+  }
+
+  /*
+   * React elements are already rendered components.
+   * Do not recursively inspect their props here.
+   */
+  if (React.isValidElement(children)) {
+    return children;
+  }
+
+  return children;
+}
+
+/**
+ * Finds the task belonging to a markdown list item.
+ */
+function findTaskForListItem(
+  children: React.ReactNode,
+  tasks: Task[] | undefined
+): Task | undefined {
+  if (!tasks || tasks.length === 0) {
+    return undefined;
+  }
+
+  const text = extractText(children).trim();
+
+  if (!text) {
+    return undefined;
+  }
+
+  return tasks.find((task) => {
+    const taskText = task.text?.trim();
+
+    if (!taskText) {
+      return false;
     }
-  );
+
+    return (
+      text === taskText ||
+      text.includes(taskText) ||
+      taskText.includes(text)
+    );
+  });
+}
+
+/**
+ * Extracts plain text recursively from React children.
+ */
+function extractText(children: React.ReactNode): string {
+  if (children === null || children === undefined) {
+    return "";
+  }
+
+  if (typeof children === "string" || typeof children === "number") {
+    return String(children);
+  }
+
+  if (Array.isArray(children)) {
+    return children.map(extractText).join("");
+  }
+
+  if (React.isValidElement<{ children?: React.ReactNode }>(children)) {
+    return extractText(children.props.children);
+  }
+
+  return "";
 }

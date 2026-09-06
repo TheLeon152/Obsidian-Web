@@ -1,13 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.models.search import SearchResponse
 from app.services.search_service import SearchService
 from app.services.vault import vault_indexer
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/api/v1/search",
     tags=["search"],
+    dependencies=[
+        Depends(get_current_user)
+    ],
 )
 
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../../config";
+import { apiFetch } from "../../api/client";
 
 
 interface VaultImageProps {
@@ -21,8 +22,8 @@ export function VaultImage({
   useEffect(() => {
     async function resolveAsset() {
       try {
-        const response = await fetch(
-          `${API_BASE_URL}/v1/assets/resolve/${encodeURIComponent(path)}`
+        const response = await apiFetch(
+          `/v1/assets/resolve/${encodeURIComponent(path)}`
         );
 
         if (!response.ok) {

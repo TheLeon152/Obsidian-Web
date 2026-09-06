@@ -16,6 +16,8 @@ import type {
   FolderContent,
 } from "../../types/vault";
 
+import "./FolderPage.css";
+
 
 interface FolderBreadcrumbsProps {
   path: string;
@@ -28,7 +30,6 @@ function FolderBreadcrumbs({
 
   const navigate =
     useNavigate();
-
 
   const parts =
     path
@@ -56,27 +57,14 @@ function FolderBreadcrumbs({
 
   return (
     <nav
+      className="folder-breadcrumbs"
       aria-label="Breadcrumb"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: "4px",
-        marginBottom: "24px",
-        fontSize: "14px",
-      }}
     >
 
       <button
         type="button"
         onClick={handleRootClick}
-        style={{
-          border: "none",
-          background: "none",
-          padding: "4px 6px",
-          cursor: "pointer",
-          fontWeight: 500,
-        }}
+        className="folder-breadcrumb-link"
       >
         🏠 Vault
       </button>
@@ -93,7 +81,6 @@ function FolderBreadcrumbs({
               )
               .join("/");
 
-
           const isLast =
             index ===
             parts.length - 1;
@@ -102,17 +89,12 @@ function FolderBreadcrumbs({
           return (
             <span
               key={currentPath}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-              }}
+              className="folder-breadcrumb-item"
             >
 
               <span
-                style={{
-                  opacity: 0.5,
-                }}
+                className="folder-breadcrumb-separator"
+                aria-hidden="true"
               >
                 /
               </span>
@@ -121,10 +103,8 @@ function FolderBreadcrumbs({
               {isLast ? (
 
                 <span
-                  style={{
-                    padding: "4px 6px",
-                    fontWeight: 600,
-                  }}
+                  className="folder-breadcrumb-current"
+                  aria-current="page"
                 >
                   {part}
                 </span>
@@ -138,13 +118,7 @@ function FolderBreadcrumbs({
                       currentPath
                     )
                   }
-                  style={{
-                    border: "none",
-                    background: "none",
-                    padding: "4px 6px",
-                    cursor: "pointer",
-                    fontWeight: 500,
-                  }}
+                  className="folder-breadcrumb-link"
                 >
                   {part}
                 </button>
@@ -174,7 +148,6 @@ export function FolderPage({
 
   const navigate =
     useNavigate();
-
 
   const {
     "*": folderPath,
@@ -225,7 +198,6 @@ export function FolderPage({
           await getFolderContent(
             decodedPath
           );
-
 
         setFolder(result);
 
@@ -295,12 +267,7 @@ export function FolderPage({
   if (loading) {
 
     return (
-      <div
-        style={{
-          padding: "16px",
-          opacity: 0.7,
-        }}
-      >
+      <div className="folder-state">
         Ordner wird geladen...
       </div>
     );
@@ -311,18 +278,12 @@ export function FolderPage({
   if (error) {
 
     return (
-      <div
-        style={{
-          padding: "16px",
-        }}
-      >
+      <div className="folder-state">
 
         <button
           type="button"
           onClick={handleBack}
-          style={{
-            marginBottom: "16px",
-          }}
+          className="folder-back-button"
         >
           ← Zurück
         </button>
@@ -340,18 +301,12 @@ export function FolderPage({
   if (!folder) {
 
     return (
-      <div
-        style={{
-          padding: "16px",
-        }}
-      >
+      <div className="folder-state">
 
         <button
           type="button"
           onClick={handleBack}
-          style={{
-            marginBottom: "16px",
-          }}
+          className="folder-back-button"
         >
           ← Zurück
         </button>
@@ -367,23 +322,12 @@ export function FolderPage({
 
 
   return (
-    <div
-      style={{
-        maxWidth: "1000px",
-      }}
-    >
+    <div className="folder-page">
 
       <button
         type="button"
         onClick={handleBack}
-        style={{
-          marginBottom: "16px",
-          border: "none",
-          background: "none",
-          padding: "4px 0",
-          cursor: "pointer",
-          fontSize: "14px",
-        }}
+        className="folder-back-button"
       >
         ← Zurück
       </button>
@@ -394,60 +338,31 @@ export function FolderPage({
       />
 
 
-      <header
-        style={{
-          marginBottom: "32px",
-        }}
-      >
+      <header className="folder-header">
 
-        <h1
-          style={{
-            margin: 0,
-            marginBottom: "8px",
-          }}
-        >
+        <h1 className="folder-title">
           📁 {folder.name}
         </h1>
 
       </header>
 
 
-      <section
-        style={{
-          marginBottom: "32px",
-        }}
-      >
+      <section className="folder-section">
 
-        <h2
-          style={{
-            fontSize: "18px",
-            marginBottom: "12px",
-          }}
-        >
+        <h2 className="folder-section-title">
           Ordner
         </h2>
 
 
         {folder.folders.length === 0 ? (
 
-          <p
-            style={{
-              opacity: 0.6,
-              fontSize: "14px",
-            }}
-          >
+          <p className="folder-empty">
             Keine Unterordner.
           </p>
 
         ) : (
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
-            }}
-          >
+          <div className="folder-entry-list">
 
             {folder.folders.map(
               (entry) => (
@@ -460,26 +375,10 @@ export function FolderPage({
                       entry.path
                     )
                   }
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    padding: "10px 12px",
-                    border: "1px solid #ddd",
-                    borderRadius: "6px",
-                    background: "transparent",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    fontSize: "15px",
-                  }}
+                  className="folder-entry"
                 >
 
-                  <span
-                    style={{
-                      marginRight: "10px",
-                      fontSize: "18px",
-                    }}
-                  >
+                  <span className="folder-entry-icon">
                     📁
                   </span>
 
@@ -499,38 +398,22 @@ export function FolderPage({
       </section>
 
 
-      <section>
+      <section className="folder-section">
 
-        <h2
-          style={{
-            fontSize: "18px",
-            marginBottom: "12px",
-          }}
-        >
+        <h2 className="folder-section-title">
           Notizen
         </h2>
 
 
         {folder.notes.length === 0 ? (
 
-          <p
-            style={{
-              opacity: 0.6,
-              fontSize: "14px",
-            }}
-          >
+          <p className="folder-empty">
             Keine Notizen in diesem Ordner.
           </p>
 
         ) : (
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
-            }}
-          >
+          <div className="folder-entry-list">
 
             {folder.notes.map(
               (entry) => (
@@ -543,26 +426,10 @@ export function FolderPage({
                       entry.path
                     )
                   }
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    padding: "10px 12px",
-                    border: "1px solid #ddd",
-                    borderRadius: "6px",
-                    background: "transparent",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    fontSize: "15px",
-                  }}
+                  className="folder-entry"
                 >
 
-                  <span
-                    style={{
-                      marginRight: "10px",
-                      fontSize: "18px",
-                    }}
-                  >
+                  <span className="folder-entry-icon">
                     📄
                   </span>
 

@@ -1,15 +1,18 @@
-from datetime import date
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.config import settings
 from app.models.calendar import CalendarEvent
 from app.services.calendar_service import CalendarService
+from app.auth.dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/api/v1/calendar",
     tags=["calendar"],
+    dependencies=[
+        Depends(get_current_user)
+    ],
 )
 
 
