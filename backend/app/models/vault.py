@@ -3,12 +3,22 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 from app.models.task import Task
+from app.services.file_type_registry import FileType
 
 
 class VaultNode(BaseModel):
+
     name: str
-    type: Literal["file", "folder"]
+
+    type: Literal[
+        "file",
+        "folder",
+    ]
+
     path: str
+
+    file_type: FileType | None = None
+
     children: list["VaultNode"] | None = None
 
 
@@ -84,11 +94,15 @@ class IndexedNote(BaseModel):
     )
 
 class FolderEntry(BaseModel):
+
     name: str
     path: str
 
+    file_type: FileType | None = None
+
 
 class FolderContent(BaseModel):
+
     name: str
     path: str
 
@@ -96,6 +110,6 @@ class FolderContent(BaseModel):
         default_factory=list
     )
 
-    notes: list[FolderEntry] = Field(
+    files: list[FolderEntry] = Field(
         default_factory=list
     )

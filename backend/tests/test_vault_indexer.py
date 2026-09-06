@@ -3,6 +3,7 @@ from pathlib import Path
 from app.services.vault_indexer import (
     VaultIndexer,
 )
+from app.models.vault import NoteReference, ResolvedLink
 
 
 def test_vault_indexer_1(
@@ -36,7 +37,7 @@ This is #react.
 
     assert "Test.md" in index
 
-    assert index["Test.md"]["tags"] == [
+    assert index["Test.md"].tags == [
         "programming",
         "project/test",
         "react",
@@ -77,13 +78,13 @@ See [[React]] and [[FastAPI|FastAPI Backend]].
 
     assert "Test.md" in index
 
-    assert index["Test.md"]["tags"] == [
+    assert index["Test.md"].tags == [
         "programming",
         "project/test",
         "react",
     ]
 
-    assert index["Test.md"]["frontmatter"] == {
+    assert index["Test.md"].frontmatter == {
         "title": "Test Note",
         "type": "knowledge",
         "status": "active",
@@ -93,7 +94,7 @@ See [[React]] and [[FastAPI|FastAPI Backend]].
         ],
     }
 
-    assert index["Test.md"]["links"] == [
+    assert index["Test.md"].links == [
         "FastAPI",
         "React",
     ]
@@ -130,19 +131,19 @@ See [[Target]].
 
     index = indexer.get_index()
 
-    assert index["Source.md"][
-        "resolved_links"
-    ] == [
-        {
-            "target": "Target",
-            "path": "Target.md",
-        }
+    assert index["Source.md"].resolved_links == [
+        ResolvedLink(
+            target="Target",
+            path="Target.md",
+            name="Target",
+        )
     ]
 
-    assert index["Target.md"][
-        "backlinks"
-    ] == [
-        "Source.md"
+    assert index["Target.md"].backlinks == [
+        NoteReference(
+            name="Source",
+            path="Source.md",
+        )
     ]
 
 
@@ -180,9 +181,13 @@ def test_multiple_backlinks(
 
     index = indexer.get_index()
 
-    assert index["Target.md"][
-        "backlinks"
-    ] == [
-        "First.md",
-        "Second.md",
+    assert index["Target.md"].backlinks == [
+        NoteReference(
+            name="First",
+            path="First.md",
+        ),
+        NoteReference(
+            name="Second",
+            path="Second.md",
+        ),
     ]

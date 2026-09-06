@@ -3,10 +3,20 @@ export type VaultNodeType =
   | "folder";
 
 
+export type FileType =
+  | "markdown"
+  | "canvas"
+  | "image"
+  | "pdf"
+  | "csv"
+  | "docx";
+
+
 export interface VaultNode {
   name: string;
   type: VaultNodeType;
   path: string;
+  file_type?: FileType;
   children?: VaultNode[];
 }
 
@@ -14,6 +24,7 @@ export interface VaultNode {
 export interface FolderEntry {
   name: string;
   path: string;
+  file_type?: FileType;
 }
 
 
@@ -22,5 +33,5 @@ export interface FolderContent {
   path: string;
 
   folders: FolderEntry[];
-  notes: FolderEntry[];
+  files: FolderEntry[];
 }

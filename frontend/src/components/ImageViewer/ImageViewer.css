@@ -1,0 +1,117 @@
+.image-viewer {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: 2.5rem 3rem 4rem;
+
+  min-width: 0;
+}
+
+
+/* =========================
+   Header
+========================= */
+
+.image-viewer-header {
+  margin-bottom: 2rem;
+
+  min-width: 0;
+}
+
+
+.image-viewer-title {
+  margin: 0;
+
+  font-size: 2rem;
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+
+/* =========================
+   Content
+========================= */
+
+.image-viewer-content {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  min-width: 0;
+}
+
+
+/* =========================
+   Image
+========================= */
+
+.image-viewer-image {
+  display: block;
+
+  max-width: 100%;
+  max-height: 75vh;
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+
+  border-radius: 10px;
+}
+
+
+/* =========================
+   State
+========================= */
+
+.file-viewer-state {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 200px;
+
+  padding: 2rem;
+
+  color: var(--text-muted, #888);
+
+  text-align: center;
+}
+
+
+.file-viewer-state-error {
+  color: #d95c5c;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width: 700px) {
+
+  .image-viewer {
+    padding: 1.5rem 1.25rem 3rem;
+  }
+
+
+  .image-viewer-title {
+    font-size: 1.6rem;
+  }
+
+
+  .image-viewer-image {
+    max-height: 70vh;
+
+    border-radius: 6px;
+  }
+}

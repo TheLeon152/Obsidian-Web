@@ -7,6 +7,7 @@ from app.models.vault import (
 )
 
 from app.services.vault_indexer import VaultIndexer
+from app.services.file_type_registry import FileTypeRegistry
 
 
 class VaultService:
@@ -66,7 +67,7 @@ class VaultService:
             )
 
         folders: list[FolderEntry] = []
-        notes: list[FolderEntry] = []
+        files: list[FolderEntry] = []
 
         for child in sorted(
             folder_path.iterdir(),
@@ -85,19 +86,31 @@ class VaultService:
                 ).as_posix()
             )
 
-            entry = FolderEntry(
-                name=child.name,
-                path=child_relative_path,
-            )
-
             if child.is_dir():
-                folders.append(entry)
 
-            elif (
-                child.is_file()
-                and child.suffix.lower() == ".md"
-            ):
-                notes.append(entry)
+                folders.append(
+                    FolderEntry(
+                        name=child.name,
+                        path=child_relative_path,
+                    )
+                )
+
+            elif child.is_file():
+
+                file_type = (
+                    FileTypeRegistry.get_type(child)
+                )
+
+                if file_type is None:
+                    continue
+
+                files.append(
+                    FolderEntry(
+                        name=child.name,
+                        path=child_relative_path,
+                        file_type=file_type,
+                    )
+                )
 
         return FolderContent(
             name=folder_path.name,
@@ -105,7 +118,7 @@ class VaultService:
                 self.vault_path
             ).as_posix(),
             folders=folders,
-            notes=notes,
+            files=files,
         )
 
 
@@ -139,10 +152,18 @@ class VaultService:
                 children=children,
             )
 
+        file_type = FileTypeRegistry.get_type(path)
+
+        if file_type is None:
+            raise ValueError(
+                f"Unsupported file type: {path.name}"
+            )
+
         return VaultNode(
             name=path.name,
             type="file",
             path=relative_path.as_posix(),
+            file_type=file_type,
         )
 
 
@@ -156,5 +177,10 @@ class VaultService:
 
         if path.name.startswith("."):
             return False
+
+        if path.is_file():
+            return FileTypeRegistry.is_supported(
+                path
+            )
 
         return True

@@ -12,6 +12,7 @@ from app.api.tasks import router as tasks_router
 from app.api.calendar import router as calendar_router
 from app.api.inbox import router as inbox_router
 from app.api.auth import router as auth_router
+from app.api.files import router as files_router
 
 
 app = FastAPI(
@@ -45,3 +46,4 @@ app.include_router(tasks_router)
 app.include_router(calendar_router)
 app.include_router(inbox_router)
 app.include_router(auth_router)
+app.include_router(files_router)

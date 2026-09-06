@@ -1,6 +1,7 @@
 from datetime import datetime
+from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 from app.config import settings
 
@@ -14,6 +15,8 @@ from app.models.inbox import (
 from app.services.inbox import InboxService
 from app.services.vault import vault_indexer
 from app.auth.dependencies import get_current_user
+from app.services.upload_service import UploadService
+from app.services.vault_service import VaultService
 
 
 router = APIRouter(
@@ -28,6 +31,17 @@ router = APIRouter(
 inbox_service = InboxService(
     vault_path=vault_indexer.vault_path,
     inbox_folder=settings.inbox_folder,
+)
+
+def get_upload_service() -> UploadService:
+    return UploadService(
+        settings.vault_path,
+        settings.inbox_folder,
+    )
+
+vault_service = VaultService(
+    settings.vault_path,
+    vault_indexer,
 )
 
 
@@ -206,3 +220,89 @@ def delete_inbox_note(
             status_code=400,
             detail=str(error),
         )
+
+
+@router.post("/upload")
+async def upload_file(
+    file: UploadFile = File(...),
+    upload_service: UploadService = Depends(get_upload_service),
+):
+
+    if not file.filename:
+        raise HTTPException(
+            status_code=400,
+            detail="Filename is required.",
+        )
+
+    try:
+        file_type = upload_service.validate_filename(file.filename)
+        destination = upload_service.get_destination(file.filename)
+    except ValueError as error:
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        )
+
+    upload_service.inbox_path.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    temp_file = upload_service.create_temp_file()
+    temp_path = Path(temp_file.name)
+
+    size = 0
+
+    try:
+        with temp_file:
+            while True:
+                chunk = await file.read(1024 * 1024)
+
+                if not chunk:
+                    break
+
+                size += len(chunk)
+
+                if size > upload_service.validator.MAX_FILE_SIZE:
+                    raise ValueError("Uploaded file is too large.")
+
+                temp_file.write(chunk)
+
+        upload_service.validator.validate_size(size)
+        upload_service.validator.validate_content(
+            temp_path,
+            file_type,
+        )
+
+        destination.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
+
+        temp_path.replace(destination)
+
+        vault_service.refresh()
+
+        return {
+            "name": destination.name,
+            "path": destination.relative_to(
+                settings.vault_path
+            ).as_posix(),
+            "file_type": file_type,
+            "size": size,
+        }
+
+    except ValueError as error:
+        if temp_path.exists():
+            temp_path.unlink()
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(error),
+        )
+
+    except Exception:
+        if temp_path.exists():
+            temp_path.unlink()
+
+        raise

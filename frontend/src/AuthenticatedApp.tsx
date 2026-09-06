@@ -20,7 +20,7 @@ import type { VaultNode } from "./types/vault";
 
 import { resolveNote } from "./api/notes";
 
-import { NotePage } from "./pages/NotePage/NotePage";
+import { FilePage } from "./pages/FilePage/FilePage";
 import { TagPage } from "./pages/TagPage/TagPage";
 
 import { TodayTasksPage } from "./pages/TaskPage/TodayTasksPage";
@@ -255,14 +255,8 @@ function AppRoutes({
    * ============================================================
    */
 
-  function handleFileClick(
-    path: string
-  ) {
-
-    navigate(
-      `/note/${encodeURI(path)}`
-    );
-
+  function handleFileClick(path: string) {
+    navigate(`/file/${encodeURI(path)}`);
   }
 
 
@@ -469,9 +463,22 @@ function AppRoutes({
             ================================================== */}
 
         <Route
+          path="/file/*"
+          element={
+            <FilePage
+              refreshKey={refreshKey}
+              onWikiLinkClick={handleWikiLinkClick}
+              onTagClick={handleTagClick}
+              onNoteClick={handleNoteClick}
+              onFolderClick={handleFolderClick}
+            />
+          }
+        />
+
+        <Route
           path="/note/*"
           element={
-            <NotePage
+            <FilePage
               refreshKey={refreshKey}
               onWikiLinkClick={handleWikiLinkClick}
               onTagClick={handleTagClick}
@@ -575,13 +582,7 @@ function AppRoutes({
 
         <Route
           path="/folder/*"
-          element={
-            <FolderPage
-              onNoteClick={
-                handleNoteClick
-              }
-            />
-          }
+          element={<FolderPage onFileClick={handleFileClick} />}
         />
 
 

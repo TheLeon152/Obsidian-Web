@@ -11,7 +11,8 @@ vault_indexer = VaultIndexer(
 vault_indexer.build()
 
 
-vault_service = VaultService(
-    settings.vault_path,
-    vault_indexer,
-)
+def get_vault_service() -> VaultService:
+    return VaultService(
+        settings.vault_path,
+        vault_indexer,
+    )

@@ -72,7 +72,6 @@ export function FileTreeNode({
   function handleClick() {
 
     if (isFolder) {
-
       setIsExpanded(
         (current) => !current
       );
@@ -80,10 +79,7 @@ export function FileTreeNode({
       return;
     }
 
-
-    onFileClick?.(
-      node.path
-    );
+    onFileClick?.(node.path);
   }
 
 

@@ -25,30 +25,17 @@ export function FileTree({
   onFolderClick,
   activePath,
 }: FileTreeProps) {
-
   return (
     <div className="file-tree">
-
-      {tree.children?.map(
-        (node) => (
-
-          <FileTreeNode
-            key={node.path}
-            node={node}
-            onFileClick={
-              onFileClick
-            }
-            onFolderClick={
-              onFolderClick
-            }
-            activePath={
-              activePath
-            }
-          />
-
-        )
-      )}
-
+      {tree.children?.map((node) => (
+        <FileTreeNode
+          key={node.path}
+          node={node}
+          onFileClick={onFileClick}
+          onFolderClick={onFolderClick}
+          activePath={activePath}
+        />
+      ))}
     </div>
   );
 }

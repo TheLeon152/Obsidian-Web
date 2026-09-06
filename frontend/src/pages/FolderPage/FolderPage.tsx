@@ -136,14 +136,14 @@ function FolderBreadcrumbs({
 
 
 interface FolderPageProps {
-  onNoteClick: (
+  onFileClick: (
     path: string
   ) => void;
 }
 
 
 export function FolderPage({
-  onNoteClick,
+  onFileClick,
 }: FolderPageProps) {
 
   const navigate =
@@ -401,28 +401,28 @@ export function FolderPage({
       <section className="folder-section">
 
         <h2 className="folder-section-title">
-          Notizen
+          Dateien
         </h2>
 
 
-        {folder.notes.length === 0 ? (
+        {folder.files.length === 0 ? (
 
           <p className="folder-empty">
-            Keine Notizen in diesem Ordner.
+            Keine Dateien in diesem Ordner.
           </p>
 
         ) : (
 
           <div className="folder-entry-list">
 
-            {folder.notes.map(
+            {folder.files.map(
               (entry) => (
 
                 <button
                   key={entry.path}
                   type="button"
                   onClick={() =>
-                    onNoteClick(
+                    onFileClick(
                       entry.path
                     )
                   }
@@ -430,13 +430,25 @@ export function FolderPage({
                 >
 
                   <span className="folder-entry-icon">
-                    📄
+                    {entry.file_type === "markdown"
+                      ? "📄"
+                      : entry.file_type === "image"
+                        ? "🖼️"
+                        : entry.file_type === "pdf"
+                          ? "📕"
+                          : entry.file_type === "canvas"
+                            ? "🗺️"
+                            : entry.file_type === "csv"
+                              ? "📊"
+                              : entry.file_type === "docx"
+                                ? "📝"
+                                : "📄"}
                   </span>
 
                   <span>
-                    {getNoteName(
-                      entry.name
-                    )}
+                    {entry.file_type === "markdown"
+                      ? getNoteName(entry.name)
+                      : entry.name}
                   </span>
 
                 </button>
